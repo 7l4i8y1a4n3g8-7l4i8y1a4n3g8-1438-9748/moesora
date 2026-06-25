@@ -20,8 +20,7 @@
 
 DEMO：[https://www.moesora.cn/](https://www.moesora.cn/)
 
-<!-- 在仓库根目录放置一张 screenshot.png 截图，即可在此处展示 -->
-![screenshot](./screenshot.png)
+![screenshot](https://www.moesora.cn/upload/screenshot.png)
 
 ## 二、说明
 
