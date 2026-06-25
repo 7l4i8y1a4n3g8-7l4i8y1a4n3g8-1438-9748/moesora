@@ -20,7 +20,7 @@
 
 DEMO：[https://www.moesora.cn/](https://www.moesora.cn/)
 
-![screenshot](https://www.moesora.cn/upload/screenshot.png)
+![screenshot](./screenshot.png)
 
 ## 二、说明
 
