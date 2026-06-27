@@ -7,8 +7,8 @@ do ->
   cfg = window.MoesoraConfig or {}
   # 标签页离开/返回文案
   originalTitle = document.title
-  hiddenTitle = cfg.hiddenTitle or '(つ_<)~ 你去哪儿了！'
-  visibleTitle = cfg.visibleTitle or '(*´∇｀*) 欢迎回来！'
+  hiddenTitle = cfg.hiddenTitle ? '(つ_<)~ 你去哪儿了！'   # 用 ? 区分「未配置」与「已清空」：清空则为 ''
+  visibleTitle = cfg.visibleTitle ? '(*´∇｀*) 欢迎回来！'
   visibleTimer = null
 
   applyDark = (dark) ->
@@ -44,15 +44,21 @@ do ->
 
   document.addEventListener 'visibilitychange', ->
     if document.hidden
-      if visibleTimer
-        clearTimeout visibleTimer
-      document.title = hiddenTitle
+      clearTimeout visibleTimer if visibleTimer
+      if hiddenTitle               # 为空则不改标题，保留页面原标题
+        originalTitle = document.title
+        document.title = hiddenTitle
     else
-      document.title = visibleTitle
-      visibleTimer = setTimeout((->
+      clearTimeout visibleTimer if visibleTimer
+      if visibleTitle
+        document.title = visibleTitle
+        visibleTimer = setTimeout((->
+          document.title = originalTitle
+          return
+        ), 2000)
+      else if hiddenTitle          # 仅在离开时改过的情况下恢复真实标题
         document.title = originalTitle
-        return
-      ), 2000)
+    return
     return
   # 明暗模式：跟随系统 + 手动切换 + 记忆
   root = document.documentElement

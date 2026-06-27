@@ -19,7 +19,8 @@
                     catTotal=${categoryFinder.list(1,1).total},
                     tagTotal=${tagFinder.list(1,1).total}">
     <img class="moe-profile-avatar"
-         th:src="${site.logo} ?: @{/assets/dist/logo.svg}" alt="avatar"/>
+         th:with="pAvatar=${!#strings.isEmpty(theme.config.sidebar?.profile_avatar) ? theme.config.sidebar.profile_avatar : site.logo}"
+         th:src="${pAvatar} ?: @{/assets/dist/logo.svg}" alt="avatar"/>
     <h3 class="moe-profile-name" th:text="${!#strings.isEmpty(theme.config.basic?.name_profile) ? theme.config.basic.name_profile : (!#strings.isEmpty(theme.config.basic?.blog_name) ? theme.config.basic.blog_name : (site.title ?: 'Moesora'))}">Moesora</h3>
     <p class="moe-profile-bio" id="moe-profile-bio"
        th:text="${!#strings.isEmpty(theme.config.sidebar?.profile_signature) ? theme.config.sidebar.profile_signature : site.subtitle}">少女祈祷中...</p>

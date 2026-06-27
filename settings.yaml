@@ -12,13 +12,13 @@ spec:
           name: document_hidden_title
           label: 离开时标签页文字
           value: "(つ_<)~ 你去哪儿了！"
-          help: 切换到别的标签页时，浏览器标题变成的文字
+          help: 切换到别的标签页时，浏览器标题变成的文字；留空则不修改标题（显示页面原标题）
 
         - $formkit: text
           name: document_visible_title
           label: 返回时标签页文字
           value: "(*´∇｀*) 欢迎回来！"
-          help: 切回本页时恢复显示的欢迎文字
+          help: 切回本页时恢复显示的欢迎文字；留空则不显示
 
         - $formkit: text
           name: blog_name
@@ -365,6 +365,10 @@ spec:
           name: recent_posts_count
           label: 最近文章-显示数量
           value: 5
+        - $formkit: attachment
+          name: profile_avatar
+          label: 头像卡-头像
+          help: 个人信息卡显示的头像；留空则使用站点设置里的 Logo
         - $formkit: text
           name: profile_signature
           label: 头像卡-个人签名
