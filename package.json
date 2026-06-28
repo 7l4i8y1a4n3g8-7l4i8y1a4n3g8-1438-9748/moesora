@@ -19,9 +19,7 @@
   },
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
-    "zip": "theme-package",
-    "package": "npm run build && npm run zip"
+    "build": "vite build && npx @halo-dev/theme-package-cli"
   },
   "devDependencies": {
     "@halo-dev/theme-package-cli": "^1.1.1",
@@ -31,5 +29,10 @@
     "postcss-nested": "^6.2.0",
     "postcss-preset-env": "^9.6.0",
     "vite": "^5.4.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
