@@ -361,10 +361,30 @@ spec:
           label: 时间天气-城市
           help: 「时间天气」组件显示的城市，如 芜湖、上海、北京。留空则按访客 IP 自动定位当前城市。需先在上方左/右栏模块里添加「时间天气」
           value: ""
+        - $formkit: select
+          name: weather_gps
+          label: 时间天气-精确定位按钮
+          help: 开启后，未填城市时「时间天气」组件会显示一个「使用精确定位」按钮，访客点击并授权后用浏览器定位获取更准确的位置（仅在留空城市时生效）。默认关闭。
+          value: "false"
+          options:
+            - label: 关闭
+              value: "false"
+            - label: 开启
+              value: "true"
         - $formkit: number
           name: recent_posts_count
           label: 最近文章-显示数量
           value: 5
+        - $formkit: number
+          name: category_count
+          label: 分类-最多显示数量
+          help: 侧栏「分类」最多显示的分类数量（请填正整数；想显示全部可填一个较大的数字，如 999）。
+          value: 8
+        - $formkit: number
+          name: tag_count
+          label: 标签-最多显示数量
+          help: 侧栏「标签」最多显示的标签数量（请填正整数；想显示全部可填一个较大的数字，如 999）。
+          value: 20
         - $formkit: attachment
           name: profile_avatar
           label: 头像卡-头像

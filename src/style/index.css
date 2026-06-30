@@ -33,9 +33,20 @@ img{max-width:100%}
 .moe-brand:hover{text-decoration:none}
 .moe-brand-logo{width:30px;height:30px;border-radius:50%;object-fit:cover}
 .moe-brand-title{font-size:19px;font-weight:700;letter-spacing:.5px}
-.moe-nav{display:flex;gap:16px;margin-left:8px;flex:1}
+.moe-nav{display:flex;gap:16px;margin-left:8px;flex:1;align-self:stretch}
 .moe-nav-link{color:var(--moe-text);opacity:.8;font-size:15px}
 .moe-nav-link:hover{opacity:1;text-decoration:none;color:var(--moe-theme)}
+.moe-nav-item{position:relative;height:100%;display:flex;align-items:center}
+.moe-nav-caret{display:inline-flex;align-items:center;transition:transform .2s}
+.moe-nav-item.has-sub:hover .moe-nav-caret,.moe-nav-item.has-sub:focus-within .moe-nav-caret{transform:rotate(180deg)}
+.moe-nav-sub{position:absolute;top:100%;left:0;min-width:150px;margin:0;padding:6px;list-style:none;background:color-mix(in srgb,var(--moe-card) 70%,transparent);backdrop-filter:blur(16px) saturate(1.5);-webkit-backdrop-filter:blur(16px) saturate(1.5);border:1px solid var(--moe-border);border-radius:12px;box-shadow:var(--moe-shadow);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s;z-index:950}
+.moe-nav-sub::before{content:"";position:absolute;top:-10px;left:0;right:0;height:10px}
+.moe-nav-item.has-sub:hover .moe-nav-sub,.moe-nav-item.has-sub:focus-within .moe-nav-sub{opacity:1;visibility:visible;transform:translateY(0)}
+.moe-nav-sub li{list-style:none;margin:0}
+.moe-nav-sublink{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;font-size:14px;color:var(--moe-text);white-space:nowrap;transition:background .15s,color .15s}
+.moe-nav-sublink:hover{background:var(--moe-bg-2);color:var(--moe-theme);text-decoration:none}
+.moe-nav-subico{display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.moe-nav-subico svg{display:block}
 .moe-icon-btn{margin-left:auto;width:38px;height:38px;border:none;cursor:pointer;
   border-radius:50%;background:var(--moe-bg-2);color:var(--moe-theme);
   display:flex;align-items:center;justify-content:center;transition:transform .2s ease}
@@ -434,8 +445,13 @@ html.dark .moe-site-bg::after{background:rgba(0,0,0,.5)}
     box-shadow:var(--moe-shadow);
     max-height:0;overflow:hidden;transition:max-height .3s ease}
   .moe-navbar.nav-open .moe-nav{max-height:75vh;overflow:auto}
+  .moe-nav-item{display:block;height:auto}
   .moe-nav-link{padding:14px 22px;border-top:1px solid var(--moe-border);font-size:16px;opacity:1;color:var(--moe-text)}
-  .moe-nav-link:first-child{border-top:none}
+  .moe-nav-item:first-child .moe-nav-link{border-top:none}
+  .moe-nav-caret{display:none}
+  .moe-nav-sub{position:static;opacity:1;visibility:visible;transform:none;background:transparent;border:none;border-radius:0;box-shadow:none;padding:0;min-width:0;list-style:none}
+  .moe-nav-sub::before{display:none}
+  .moe-nav-sublink{padding:12px 22px 12px 46px;border-top:1px solid var(--moe-border);font-size:15px;color:var(--moe-text)}
   .moe-search:focus-within .moe-search-input,.moe-search:hover .moe-search-input{width:120px}
   /* 菜单展开时，导航栏转为实底，保证下拉项可读（覆盖顶部透明态） */
   .moe-navbar.nav-open{background:var(--moe-card);border-bottom-color:var(--moe-border);backdrop-filter:blur(10px)}
@@ -1116,6 +1132,10 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 .moe-weather-timerow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-top:11px;border-top:1px dashed var(--moe-border)}
 .moe-weather-time{font-size:17px;font-weight:700;color:var(--moe-text);font-feature-settings:"tnum";font-variant-numeric:tabular-nums;letter-spacing:.5px}
 .moe-weather-date{font-size:12.5px;color:var(--moe-muted)}
+.moe-weather-gps{display:inline-flex;align-items:center;gap:5px;margin-top:11px;padding:5px 12px;border:1px solid var(--moe-border);border-radius:999px;background:transparent;color:var(--moe-theme);font-size:12px;font-family:inherit;line-height:1.4;cursor:pointer;transition:background .2s,border-color .2s,opacity .2s}
+.moe-weather-gps:hover{background:var(--moe-bg-2);border-color:var(--moe-theme)}
+.moe-weather-gps:disabled{opacity:.6;cursor:default}
+.moe-weather-gps svg{flex:none}
 
 /* ===== 留言墙 /wishes ===== */
 .moe-wish-header{text-align:center;padding:10px 0 4px}

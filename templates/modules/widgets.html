@@ -142,33 +142,25 @@
   </section>
 
   <!-- 分类 -->
-  <th:block th:case="'categories'" th:with="catTree=${categoryFinder.listAsTree()}">
-    <section class="moe-card moe-cat-card" th:if="${catTree != null and !catTree.isEmpty()}">
+  <th:block th:case="'categories'" th:with="catList=${categoryFinder.list(1, theme.config.sidebar?.category_count ?: 8).items}">
+    <section class="moe-card moe-cat-card" th:if="${catList != null and !catList.isEmpty()}">
       <div class="moe-cat-head">
         <h4 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('folder')}"></th:block></span>分类</h4>
         <a class="moe-cat-more" th:href="@{/categories}">更多 »</a>
       </div>
       <ul class="moe-cat-list">
-        <li th:each="cat : ${catTree}">
+        <li th:each="cat : ${catList}">
           <a th:href="${cat.status.permalink}">
             <span class="moe-cat-name" th:text="${cat.spec.displayName}">分类</span>
             <span class="moe-cat-count" th:text="${cat.status?.postCount} ?: 0">0</span>
           </a>
-          <ul class="moe-cat-sub" th:if="${cat.children != null and !cat.children.isEmpty()}">
-            <li th:each="sub : ${cat.children}">
-              <a th:href="${sub.status.permalink}">
-                <span class="moe-cat-name" th:text="${sub.spec.displayName}">子分类</span>
-                <span class="moe-cat-count" th:text="${sub.status?.postCount} ?: 0">0</span>
-              </a>
-            </li>
-          </ul>
         </li>
       </ul>
     </section>
   </th:block>
 
   <!-- 标签云 -->
-  <th:block th:case="'tags'" th:with="allTags=${tagFinder.listAll()}">
+  <th:block th:case="'tags'" th:with="allTags=${tagFinder.list(1, theme.config.sidebar?.tag_count ?: 20).items}">
     <section class="moe-card" th:if="${allTags != null and !allTags.isEmpty()}">
       <div class="moe-cat-head">
         <h4 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('tag')}"></th:block></span>标签</h4>
@@ -201,6 +193,10 @@
       <span class="moe-weather-time" data-role="time">--:--:--</span>
       <span class="moe-weather-date" data-role="date">----</span>
     </div>
+    <button type="button" class="moe-weather-gps" data-role="gps" th:if="${theme.config.sidebar?.weather_gps == 'true'}">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span data-role="gpstext">使用精确定位</span>
+    </button>
     <script>
     (function(){
       var me = document.currentScript;
@@ -262,6 +258,29 @@
         if(elCond) elCond.textContent=msg||"天气获取失败";
         if(elCity) elCity.textContent=(root.getAttribute("data-city")||"").trim()||"";
       }
+      // ===== GPS 精确定位（仅后台开启、按钮存在时可用；点击触发 + 本地缓存避免重复弹窗）=====
+      var GPS_KEY="moe-wx-gps", GPS_TTL=604800000;
+      var gpsBtn=root.querySelector('[data-role="gps"]'), gpsTxt=root.querySelector('[data-role="gpstext"]');
+      function getGpsCache(){ try{ var o=JSON.parse(localStorage.getItem(GPS_KEY)||"null"); if(o&&o.lat!=null&&(Date.now()-o.t)<GPS_TTL) return o; }catch(e){} return null; }
+      function saveGpsCache(la,lo,nm){ try{ localStorage.setItem(GPS_KEY,JSON.stringify({lat:la,lon:lo,name:nm,t:Date.now()})); }catch(e){} }
+      function useGps(){
+        if(!navigator.geolocation){ if(gpsTxt) gpsTxt.textContent="浏览器不支持定位"; return; }
+        if(gpsBtn) gpsBtn.disabled=true; if(gpsTxt) gpsTxt.textContent="定位中…";
+        navigator.geolocation.getCurrentPosition(function(pos){
+          var la=pos.coords.latitude, lo=pos.coords.longitude;
+          if(gpsBtn) gpsBtn.disabled=false; if(gpsTxt) gpsTxt.textContent="使用精确定位";
+          fetch("https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+la+"&longitude="+lo+"&localityLanguage=zh")
+            .then(function(r){ return r.json(); })
+            .then(function(j){ var nm=(j&&(j.city||j.locality||j.principalSubdivision))||"当前位置"; saveGpsCache(la,lo,nm); fetchWx(la,lo,nm); })
+            .catch(function(){ saveGpsCache(la,lo,"当前位置"); fetchWx(la,lo,"当前位置"); });
+        }, function(err){
+          if(gpsBtn) gpsBtn.disabled=false;
+          if(gpsTxt) gpsTxt.textContent=(err&&err.code===1)?"已拒绝授权":"定位失败";
+          setTimeout(function(){ if(gpsTxt) gpsTxt.textContent="使用精确定位"; },2500);
+        }, { enableHighAccuracy:true, timeout:10000, maximumAge:600000 });
+      }
+      if(gpsBtn) gpsBtn.addEventListener("click", useGps);
+
       var cache=window.__moeWeatherCache;
       if(cache && (Date.now()-cache.t<1800000)){ render(cache.name,cache.code,cache.temp,cache.day); return; }
       function fetchWx(lat,lon,name){
@@ -282,6 +301,8 @@
             if(!g) return fail("未找到该城市");
             fetchWx(g.latitude,g.longitude,g.name||city);
           }).catch(function(){ fail(); });
+      } else if(gpsBtn && getGpsCache()){
+        var gc=getGpsCache(); fetchWx(gc.lat,gc.lon,gc.name||"当前位置");
       } else {
         function resolveZh(enName,lat,lon){
           if(!enName){ fetchWx(lat,lon,"本地"); return; }

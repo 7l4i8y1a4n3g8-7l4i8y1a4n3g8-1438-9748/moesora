@@ -11,13 +11,19 @@
     <nav class="moe-nav" th:with="primary=${menuFinder.getPrimary()}">
       <!-- 有主菜单则渲染菜单项，否则回退为「首页」。图标按菜单名关键字匹配，风格与全站统一。 -->
       <th:block th:if="${primary != null and primary.menuItems != null and !primary.menuItems.isEmpty()}">
-        <a th:each="item : ${primary.menuItems}" class="moe-nav-link"
+        <div th:each="item : ${primary.menuItems}" class="moe-nav-item" th:classappend="${item.children != null and !item.children.isEmpty()} ? ' has-sub' : ''">
+          <a class="moe-nav-link"
            th:href="${item.status.href}"
            th:with="nm=${item.status.displayName},
                     ikey=${((#strings.contains(nm,'首页') or #strings.contains(nm,'主页') or #strings.containsIgnoreCase(nm,'home')) ? 'home' : ((#strings.contains(nm,'归档') or #strings.containsIgnoreCase(nm,'archive')) ? 'archive' : ((#strings.contains(nm,'分类') or #strings.containsIgnoreCase(nm,'categor')) ? 'folder' : ((#strings.contains(nm,'标签') or #strings.containsIgnoreCase(nm,'tag')) ? 'tag' : ((#strings.contains(nm,'说说') or #strings.contains(nm,'动态') or #strings.contains(nm,'瞬间') or #strings.containsIgnoreCase(nm,'moment')) ? 'chat' : ((#strings.contains(nm,'相册') or #strings.contains(nm,'图库') or #strings.containsIgnoreCase(nm,'photo') or #strings.containsIgnoreCase(nm,'gallery')) ? 'image' : ((#strings.contains(nm,'留言') or #strings.contains(nm,'联系') or #strings.containsIgnoreCase(nm,'message') or #strings.containsIgnoreCase(nm,'contact')) ? 'mail' : ((#strings.contains(nm,'友链') or #strings.contains(nm,'链接') or #strings.containsIgnoreCase(nm,'link') or #strings.containsIgnoreCase(nm,'friend')) ? 'link' : ((#strings.contains(nm,'关于') or #strings.containsIgnoreCase(nm,'about')) ? 'heart' : 'sparkle')))))))))}">
           <span class="moe-nav-ico"><th:block th:replace="~{modules/icons :: icon(${ikey})}"></th:block></span>
           <span class="moe-nav-text" th:text="${nm}">菜单</span>
+          <span th:if="${item.children != null and !item.children.isEmpty()}" class="moe-nav-caret" aria-hidden="true"><svg viewBox="0 0 12 8" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 2 6 6.2 10.5 2"/></svg></span>
         </a>
+        <ul class="moe-nav-sub" th:if="${item.children != null and !item.children.isEmpty()}">
+          <li th:each="sub : ${item.children}" th:with="snm=${sub.status.displayName},sikey=${((#strings.contains(snm,'首页') or #strings.contains(snm,'主页') or #strings.containsIgnoreCase(snm,'home')) ? 'home' : ((#strings.contains(snm,'归档') or #strings.containsIgnoreCase(snm,'archive')) ? 'archive' : ((#strings.contains(snm,'分类') or #strings.containsIgnoreCase(snm,'categor')) ? 'folder' : ((#strings.contains(snm,'标签') or #strings.containsIgnoreCase(snm,'tag')) ? 'tag' : ((#strings.contains(snm,'说说') or #strings.contains(snm,'动态') or #strings.contains(snm,'瞬间') or #strings.containsIgnoreCase(snm,'moment')) ? 'chat' : ((#strings.contains(snm,'相册') or #strings.contains(snm,'图库') or #strings.containsIgnoreCase(snm,'photo') or #strings.containsIgnoreCase(snm,'gallery')) ? 'image' : ((#strings.contains(snm,'留言') or #strings.contains(snm,'联系') or #strings.containsIgnoreCase(snm,'message') or #strings.containsIgnoreCase(snm,'contact')) ? 'mail' : ((#strings.contains(snm,'友链') or #strings.contains(snm,'链接') or #strings.containsIgnoreCase(snm,'link') or #strings.containsIgnoreCase(snm,'friend')) ? 'link' : ((#strings.contains(snm,'关于') or #strings.containsIgnoreCase(snm,'about')) ? 'heart' : 'sparkle')))))))))}"><a class="moe-nav-sublink" th:href="${sub.status.href}"><span class="moe-nav-subico"><th:block th:replace="~{modules/icons :: icon(${sikey})}"></th:block></span><span th:text="${snm}">子项</span></a></li>
+        </ul>
+        </div>
       </th:block>
       <a th:unless="${primary != null and primary.menuItems != null and !primary.menuItems.isEmpty()}"
          class="moe-nav-link" th:href="@{/}">
@@ -94,7 +100,7 @@
       var open=bar.classList.toggle("nav-open");
       t.setAttribute("aria-expanded", open?"true":"false");
     });
-    bar.querySelectorAll(".moe-nav-link").forEach(function(a){ a.addEventListener("click",close); });
+    bar.querySelectorAll(".moe-nav-link,.moe-nav-sublink").forEach(function(a){ a.addEventListener("click",close); });
     document.addEventListener("click",function(e){ if(bar.classList.contains("nav-open") && !bar.contains(e.target)) close(); });
   })();
   </script>
