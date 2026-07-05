@@ -84,6 +84,47 @@
       </svg>
     </button>
 
+    <div class="moe-user-entry"
+         th:with="currentUser=${contributorFinder.getContributor(#authentication.name)},
+                  isLoggedIn=${currentUser != null and !#strings.equals(currentUser.name, 'anonymousUser')}">
+      <a th:unless="${isLoggedIn}" class="moe-user-login" th:href="@{/login}" title="登录" aria-label="登录">
+        <span class="moe-user-login-ico" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
+        <span class="moe-user-login-text">登录</span>
+      </a>
+
+      <div th:if="${isLoggedIn}" class="moe-user-menu">
+        <button class="moe-user-trigger" type="button" aria-label="用户菜单" aria-haspopup="true" style="width:38px;height:38px;border-radius:999px;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;padding:3px;">
+          <img th:if="${!#strings.isEmpty(currentUser.avatar)}" class="moe-user-avatar" th:src="${currentUser.avatar}" th:alt="${currentUser.displayName}" width="32" height="32" style="width:32px;height:32px;border-radius:50%;object-fit:cover;display:block;max-width:32px;max-height:32px;"/>
+          <span th:unless="${!#strings.isEmpty(currentUser.avatar)}" class="moe-user-avatar moe-user-avatar-fallback" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
+        </button>
+
+        <div class="moe-user-dropdown" role="menu" style="display:none;">
+          <div class="moe-user-card">
+            <img th:if="${!#strings.isEmpty(currentUser.avatar)}" class="moe-user-card-avatar" th:src="${currentUser.avatar}" th:alt="${currentUser.displayName}" width="40" height="40" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;max-width:40px;max-height:40px;"/>
+            <span th:unless="${!#strings.isEmpty(currentUser.avatar)}" class="moe-user-card-avatar moe-user-card-avatar-fallback" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
+            <div class="moe-user-card-meta">
+              <div class="moe-user-name" th:text="${!#strings.isEmpty(currentUser.displayName) ? currentUser.displayName : currentUser.name}">用户</div>
+              <div class="moe-user-slug" th:text="${currentUser.name}">username</div>
+            </div>
+          </div>
+          <a class="moe-user-dropdown-item" th:href="@{/console}" role="menuitem">
+            <span class="moe-user-dropdown-ico" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('doc')}"></th:block></span>
+            <span>控制台</span>
+          </a>
+          <a class="moe-user-dropdown-item" th:href="@{/uc}" role="menuitem">
+            <span class="moe-user-dropdown-ico" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
+            <span>个人中心</span>
+          </a>
+          <a class="moe-user-dropdown-item is-danger" th:href="@{/logout}" role="menuitem">
+            <span class="moe-user-dropdown-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18"/></svg>
+            </span>
+            <span>退出登录</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- 移动端汉堡菜单按钮（窄屏显示） -->
     <button id="moe-nav-toggle" class="moe-nav-toggle" type="button" aria-label="菜单" aria-expanded="false">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
