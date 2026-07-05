@@ -33,9 +33,6 @@
                 tUrl=${!#strings.isEmpty(theme.config.footer?.theme_url) ? theme.config.footer.theme_url : '/'}">
       Powered by <a th:href="${pUrl}" target="_blank" rel="noopener" th:text="${pName}">Halo</a>
       · Theme <a th:href="${tUrl}" target="_blank" rel="noopener" th:text="${tName}">Moesora</a>
-      <th:block th:if="${theme.config.footer?.show_login}">
-        · <a class="moe-footer-login" th:href="${theme.config.footer?.login_url} ?: '/console'">登录</a>
-      </th:block>
     </p>
   </div>
   <script th:if="${theme.config.footer?.since != null and theme.config.footer?.since != ''}" th:inline="javascript">

@@ -86,8 +86,9 @@
 
     <div class="moe-user-entry"
          th:with="currentUser=${contributorFinder.getContributor(#authentication.name)},
-                  isLoggedIn=${currentUser != null and !#strings.equals(currentUser.name, 'anonymousUser')}">
-      <a th:unless="${isLoggedIn}" class="moe-user-login" th:href="@{/login}" title="登录" aria-label="登录">
+                  isLoggedIn=${currentUser != null and !#strings.equals(currentUser.name, 'anonymousUser')},
+                  loginUrl=${!#strings.isEmpty(theme.config.basic?.navbar_login_url) ? theme.config.basic.navbar_login_url : '/console'}">
+      <a th:unless="${isLoggedIn}" class="moe-user-login" th:href="@{${loginUrl}}" title="登录" aria-label="登录">
         <span class="moe-user-login-ico" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
         <span class="moe-user-login-text">登录</span>
       </a>
@@ -115,12 +116,12 @@
             <span class="moe-user-dropdown-ico" aria-hidden="true"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
             <span>个人中心</span>
           </a>
-          <a class="moe-user-dropdown-item is-danger" th:href="@{/logout}" role="menuitem">
+          <button type="button" class="moe-user-dropdown-item is-danger" data-moe-logout role="menuitem">
             <span class="moe-user-dropdown-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18"/></svg>
             </span>
             <span>退出登录</span>
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -143,6 +144,40 @@
     });
     bar.querySelectorAll(".moe-nav-link,.moe-nav-sublink").forEach(function(a){ a.addEventListener("click",close); });
     document.addEventListener("click",function(e){ if(bar.classList.contains("nav-open") && !bar.contains(e.target)) close(); });
+  })();
+  </script>
+  <script>
+  (function(){
+    function getCookie(n){ var m=document.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)')); return m?decodeURIComponent(m[1]):''; }
+    document.addEventListener("click",function(e){
+      var btn=e.target.closest ? e.target.closest("[data-moe-logout]") : null;
+      if(!btn) return;
+      e.preventDefault();
+      var token=getCookie("XSRF-TOKEN");
+      var f=document.createElement("form");
+      f.method="POST"; f.action="/logout"; f.style.display="none";
+      if(token){ var i=document.createElement("input"); i.type="hidden"; i.name="_csrf"; i.value=token; f.appendChild(i); }
+      document.body.appendChild(f); f.submit();
+    });
+  })();
+  </script>
+  <script>
+  (function(){
+    var menu=document.querySelector(".moe-user-menu");
+    if(!menu) return;
+    var trigger=menu.querySelector(".moe-user-trigger");
+    if(!trigger) return;
+    trigger.addEventListener("click",function(e){
+      e.stopPropagation();
+      var open=menu.classList.toggle("is-open");
+      trigger.setAttribute("aria-expanded", open?"true":"false");
+    });
+    document.addEventListener("click",function(e){
+      if(!menu.contains(e.target)){ menu.classList.remove("is-open"); trigger.setAttribute("aria-expanded","false"); }
+    });
+    document.addEventListener("keydown",function(e){
+      if(e.key==="Escape"){ menu.classList.remove("is-open"); trigger.setAttribute("aria-expanded","false"); }
+    });
   })();
   </script>
 </header>

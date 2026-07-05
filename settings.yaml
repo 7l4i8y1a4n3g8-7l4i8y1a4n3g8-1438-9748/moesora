@@ -33,6 +33,12 @@ spec:
           value: ""
 
         - $formkit: text
+          name: navbar_login_url
+          label: 顶栏-登录入口地址
+          help: 导航栏右上角「登录」按钮的跳转地址。默认 /console（后台登录）；如需前台登录页可填 /login
+          value: "/console"
+
+        - $formkit: text
           name: name_hero
           label: 首页大图显示名称
           help: 显示在首页大图标题处。留空则使用站点设置里的标题
@@ -576,19 +582,6 @@ spec:
           label: 页脚 Theme 链接
           value: ""
           help: "点击 Theme 文字跳转的地址，如 GitHub 主题源码页；留空则跳首页"
-        - $formkit: select
-          name: show_login
-          label: 页脚-显示登录入口
-          value: false
-          help: 开启后页脚出现「登录」链接，指向 Halo 后台登录页（若开放注册，登录页自带注册入口）
-          options:
-            - { label: "显示", value: true }
-            - { label: "隐藏", value: false }
-        - $formkit: text
-          name: login_url
-          label: 页脚-登录入口地址
-          value: "/console"
-          help: 默认 /console（未登录会自动跳到登录页）。如后台路径不同可改
 
     - group: comment
       label: 评论
