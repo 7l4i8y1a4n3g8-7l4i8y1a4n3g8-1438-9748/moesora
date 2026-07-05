@@ -596,6 +596,20 @@ html.dark .moe-chip[style*="--moe-c"]{color:color-mix(in srgb,var(--moe-c) 62%,#
 .moe-code.is-light .moe-code-btn:hover{color:#222;background:rgba(0,0,0,.08)}
 .moe-code.is-light .moe-code-ln{color:rgba(0,0,0,.32);border-right-color:rgba(0,0,0,.1)}
 
+/* ===== plugin-text-diagram / Mermaid 文本绘图适配 ===== */
+.moe-post-content text-diagram[data-type="mermaid"],
+.moe-moment-body text-diagram[data-type="mermaid"]{
+  display:block;max-width:100%;margin:1.4em auto;padding:16px;overflow-x:auto;
+  color:var(--moe-text);text-align:center;white-space:pre;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Cascadia Code","Source Code Pro",monospace;
+  background:var(--moe-bg-2);border:1px solid var(--moe-border);border-radius:14px;box-shadow:var(--moe-shadow)
+}
+.moe-post-content text-diagram[data-type="mermaid"][data-processed="true"],
+.moe-moment-body text-diagram[data-type="mermaid"][data-processed="true"]{white-space:normal;font-family:inherit}
+.moe-post-content text-diagram[data-type="mermaid"] svg,
+.moe-moment-body text-diagram[data-type="mermaid"] svg{display:block;max-width:100%;height:auto;margin:0 auto}
+html.dark .moe-post-content text-diagram[data-type="mermaid"],
+html.dark .moe-moment-body text-diagram[data-type="mermaid"]{background:var(--moe-card)}
+
 /* ===== 文章封面大图卡片 ===== */
 .moe-article{overflow:hidden}
 .moe-article-hero{position:relative;margin:-18px -20px 20px;min-height:300px;display:flex;

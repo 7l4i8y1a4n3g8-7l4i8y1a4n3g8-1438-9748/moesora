@@ -121,6 +121,7 @@
       else if (def === "light") dark = false;
       else dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       if (dark) document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-color-scheme", dark ? "dark" : "light");
       if (cfg.headingAnim === false) document.documentElement.classList.add("moe-no-anim");
     })();
   </script>

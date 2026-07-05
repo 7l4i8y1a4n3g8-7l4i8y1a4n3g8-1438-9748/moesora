@@ -13,6 +13,7 @@ do ->
 
   applyDark = (dark) ->
     root.classList.toggle 'dark', dark
+    root.setAttribute 'data-color-scheme', if dark then 'dark' else 'light'
     return
 
   readSaved = ->
@@ -395,6 +396,67 @@ window.MoesoraLightbox = do ->
     open: open
     close: close
   }
+
+# ---- plugin-text-diagram 兼容：依赖插件提供 Mermaid，主题只同步暗色状态并在 PJAX 后重跑渲染 ----
+do ->
+  SELECTOR = 'text-diagram[data-type="mermaid"]'
+
+  hasDiagram = ->
+    !!document.querySelector SELECTOR
+
+  waitForMermaid = (done) ->
+    if window.mermaid
+      done()
+      return
+    scripts = document.querySelectorAll 'script[src*="/plugins/text-diagram/assets/static/mermaid.min.js"]'
+    if !scripts.length
+      return
+    if window.__moeTextDiagramMermaidPromise
+      window.__moeTextDiagramMermaidPromise.then(done).catch ->
+      return
+    window.__moeTextDiagramMermaidPromise = new Promise (resolve, reject) ->
+      settled = false
+      finish = ->
+        return if settled
+        settled = true
+        resolve()
+        return
+      fail = ->
+        return if settled
+        settled = true
+        reject()
+        return
+      Array::forEach.call scripts, (s) ->
+        s.addEventListener 'load', finish, once: true
+        s.addEventListener 'error', fail, once: true
+        return
+      setTimeout finish, 3000
+      return
+    window.__moeTextDiagramMermaidPromise.then(done).catch ->
+    return
+
+  run = ->
+    return unless hasDiagram()
+    waitForMermaid ->
+      return unless window.mermaid
+      try
+        window.mermaid.initialize
+          startOnLoad: false
+          theme: if document.documentElement.classList.contains('dark') then 'dark' else 'default'
+        result = window.mermaid.run
+          querySelector: SELECTOR
+        if result and typeof result.catch == 'function'
+          result.catch ->
+      catch e
+      return
+    return
+
+  window.MoesoraTextDiagramInit = run
+  if document.readyState == 'complete'
+    setTimeout run, 0
+  else
+    window.addEventListener 'load', run
+  return
 
 window.MoesoraInitPage = ->
   # 文章字数统计 / 预计阅读时长
@@ -816,6 +878,8 @@ window.MoesoraInitPage = ->
     return
   if typeof window.MoesoraLibsInit == 'function'
     window.MoesoraLibsInit()
+  if typeof window.MoesoraTextDiagramInit == 'function'
+    window.MoesoraTextDiagramInit()
   return
 
 # 首次加载执行一次
