@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:halo="https://halo.run"
       th:fragment="layout(content, hero, isHome)">
 <head th:replace="~{modules/head :: head}"></head>
 <body>
@@ -186,5 +186,7 @@
   <!-- 自定义：内嵌 JS（body 末尾） -->
   <script th:if="${!#strings.isEmpty(theme.config.custom?.inline_js_body)}"
           th:utext="${theme.config.custom.inline_js_body}"></script>
+  <!-- Halo 插件 Footer 扩展注入点 -->
+  <halo:footer />
 </body>
 </html>

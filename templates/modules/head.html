@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:halo="https://halo.run">
 <head th:fragment="head">
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -121,8 +121,11 @@
       else if (def === "light") dark = false;
       else dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       if (dark) document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-color-scheme", dark ? "dark" : "light");
       if (cfg.headingAnim === false) document.documentElement.classList.add("moe-no-anim");
     })();
   </script>
+  <!-- Halo 插件 Head 扩展注入点 -->
+  <halo:head />
 </head>
 </html>

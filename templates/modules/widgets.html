@@ -49,7 +49,8 @@
     </div>
     <script th:inline="javascript">
     (function(){
-      var text = (/*[[${!#strings.isEmpty(theme.config.sidebar?.profile_signature) ? theme.config.sidebar.profile_signature : site.subtitle}]]*/ "").trim();
+      var text = /*[[${!#strings.isEmpty(theme.config.sidebar?.profile_signature) ? theme.config.sidebar.profile_signature : site.subtitle}]]*/ "";
+      text = (text || "").trim();
       var el = document.getElementById("moe-profile-bio");
       if(!el || !text) return;
       el.textContent = "";
