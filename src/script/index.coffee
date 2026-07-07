@@ -1525,7 +1525,8 @@ do ->
   mcfg = window.MoesoraConfig or {}
   er = mcfg.extRedirect or {}
   return unless er.on
-  delay = Math.max 1, (parseInt(er.delay, 10) or 9)
+  rawDelay = parseInt(er.delay, 10)
+  delay = if isNaN(rawDelay) then 9 else Math.max(0, rawDelay)
   siteName = mcfg.siteName or location.hostname
   whitelist = String(er.whitelist or '').split(/[,\n]/).map((s) -> s.trim().toLowerCase()).filter((s) -> s.length > 0)
   CONTENT_SEL = '.moe-post-content, .moe-moment-body'
@@ -1596,6 +1597,13 @@ do ->
     pctEl.textContent = '0%'
     countEl.textContent = delay + ' 秒后可跳转'
     ov.removeAttribute 'hidden'
+    if delay <= 0
+      fillEl.style.width = '100%'
+      pctEl.textContent = '100%'
+      countEl.textContent = '现在可以跳转'
+      goBtn.disabled = false
+      stop()
+      return
     remain = delay
     stop()
     timer = setInterval (->

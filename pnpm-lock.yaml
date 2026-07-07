@@ -20,9 +20,6 @@ importers:
       postcss:
         specifier: ^8.4.0
         version: 8.5.15
-      postcss-nested:
-        specifier: ^6.2.0
-        version: 6.2.0(postcss@8.5.15)
       postcss-preset-env:
         specifier: ^9.6.0
         version: 9.6.0(postcss@8.5.15)
@@ -988,12 +985,6 @@ packages:
     engines: {node: ^14 || ^16 || >=18}
     peerDependencies:
       postcss: ^8.4
-
-  postcss-nested@6.2.0:
-    resolution: {integrity: sha512-HQbt28KulC5AJzG+cZtj9kvKB93CFCdLvog1WFLf1D+xmMvPGlBstkpTEZfK5+AN9hfJocyBFCNiqyS48bpgzQ==}
-    engines: {node: '>=12.0'}
-    peerDependencies:
-      postcss: ^8.2.14
 
   postcss-nesting@12.1.5:
     resolution: {integrity: sha512-N1NgI1PDCiAGWPTYrwqm8wpjv0bgDmkYHH72pNsqTCv9CObxjxftdYu6AKtGN+pnJa7FQjMm3v4sp8QJbFsYdQ==}
@@ -2026,11 +2017,6 @@ snapshots:
     dependencies:
       postcss: 8.5.15
       postcss-value-parser: 4.2.0
-
-  postcss-nested@6.2.0(postcss@8.5.15):
-    dependencies:
-      postcss: 8.5.15
-      postcss-selector-parser: 6.1.4
 
   postcss-nesting@12.1.5(postcss@8.5.15):
     dependencies:

@@ -291,7 +291,7 @@ spec:
           name: external_redirect_delay
           label: 跳转倒计时（秒）
           value: 9
-          help: "确认页需等待的秒数，默认 9 秒"
+          help: "确认页需等待的秒数，默认 9 秒；填 0 则无需等待、弹出后可立即点击跳转"
         - $formkit: textarea
           name: external_redirect_whitelist
           label: 跳转白名单域名

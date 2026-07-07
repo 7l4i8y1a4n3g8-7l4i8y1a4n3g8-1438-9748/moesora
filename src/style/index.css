@@ -39,7 +39,7 @@ img{max-width:100%}
 .moe-nav-item{position:relative;height:100%;display:flex;align-items:center}
 .moe-nav-caret{display:inline-flex;align-items:center;transition:transform .2s}
 .moe-nav-item.has-sub:hover .moe-nav-caret,.moe-nav-item.has-sub:focus-within .moe-nav-caret{transform:rotate(180deg)}
-.moe-nav-sub{position:absolute;top:100%;left:0;min-width:150px;margin:0;padding:6px;list-style:none;background:color-mix(in srgb,var(--moe-card) 70%,transparent);backdrop-filter:blur(16px) saturate(1.5);-webkit-backdrop-filter:blur(16px) saturate(1.5);border:1px solid var(--moe-border);border-radius:12px;box-shadow:var(--moe-shadow);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s;z-index:950}
+.moe-nav-sub{position:absolute;top:100%;left:0;min-width:150px;margin:0;padding:6px;list-style:none;background:color-mix(in srgb,var(--moe-card) 70%,transparent);backdrop-filter:blur(16px) saturate(1.5);border:1px solid var(--moe-border);border-radius:12px;box-shadow:var(--moe-shadow);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s;z-index:950}
 .moe-nav-sub::before{content:"";position:absolute;top:-10px;left:0;right:0;height:10px}
 .moe-nav-item.has-sub:hover .moe-nav-sub,.moe-nav-item.has-sub:focus-within .moe-nav-sub{opacity:1;visibility:visible;transform:translateY(0)}
 .moe-nav-sub li{list-style:none;margin:0}
@@ -61,7 +61,7 @@ img{max-width:100%}
 .moe-user-trigger:hover{transform:translateY(-1px)}
 .moe-user-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 0 0 2px color-mix(in srgb,var(--moe-theme) 32%,transparent)}
 .moe-user-avatar-fallback{display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--moe-theme) 14%,var(--moe-card));font-size:17px}
-.moe-user-dropdown{position:absolute;top:calc(100% + 14px);right:0;width:230px;padding:8px;background:color-mix(in srgb,var(--moe-card) 82%,transparent);backdrop-filter:blur(16px) saturate(1.45);-webkit-backdrop-filter:blur(16px) saturate(1.45);border:1px solid var(--moe-border);border-radius:16px;box-shadow:var(--moe-shadow);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s;z-index:1000}
+.moe-user-dropdown{position:absolute;top:calc(100% + 14px);right:0;width:230px;padding:8px;background:color-mix(in srgb,var(--moe-card) 82%,transparent);backdrop-filter:blur(16px) saturate(1.45);border:1px solid var(--moe-border);border-radius:16px;box-shadow:var(--moe-shadow);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s;z-index:1000}
 .moe-user-dropdown::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px}
 .moe-user-menu.is-open .moe-user-dropdown{display:block!important;opacity:1;visibility:visible;transform:translateY(0)}
 @media (hover:hover){.moe-user-menu:hover .moe-user-dropdown{display:block!important;opacity:1;visibility:visible;transform:translateY(0)}}
@@ -931,7 +931,7 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 .moe-cmt-preview-btn:hover{border-color:var(--moe-theme);color:var(--moe-theme)}
 
 /* ===== 站外链接跳转确认页 ===== */
-.moe-extlink-mask{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(24,14,24,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:moeExtFade .25s ease}
+.moe-extlink-mask{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(24,14,24,.62);backdrop-filter:blur(6px);animation:moeExtFade .25s ease}
 .moe-extlink-mask[hidden]{display:none}
 @keyframes moeExtFade{from{opacity:0}to{opacity:1}}
 .moe-extlink{width:min(560px,100%);background:var(--moe-card);border:1px solid var(--moe-border);border-radius:18px;box-shadow:var(--moe-shadow);padding:26px 26px 22px;text-align:center;animation:moeExtPop .28s cubic-bezier(.2,.8,.3,1)}
@@ -1265,7 +1265,7 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 /* 留言墙：只读详情弹窗 */
 .moe-wish-modal{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px}
 .moe-wish-modal[hidden]{display:none}
-.moe-wish-modal-mask{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.moe-wish-modal-mask{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(2px);}
 .moe-wish-modal-box{position:relative;z-index:1;width:min(440px,92vw);max-height:86vh;overflow-y:auto;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.42);animation:moeWishPop .22s ease}
 @keyframes moeWishPop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 .moe-wish-modal-body{padding:20px 18px 16px;color:#3f3f46;border-radius:18px}
