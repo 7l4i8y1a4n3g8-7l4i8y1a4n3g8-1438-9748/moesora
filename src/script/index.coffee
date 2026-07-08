@@ -435,38 +435,29 @@ window.MoesoraLightbox = do ->
     close: close
   }
 
-# ---- plugin-text-diagram 兼容：依赖插件提供 Mermaid，主题随明暗状态重渲染并在 PJAX 后重跑 ----
+# ---- plugin-text-diagram 兼容：主题加载 Mermaid 并渲染，支持明暗切换重渲染 ----
 do ->
   SELECTOR = 'text-diagram[data-type="mermaid"]'
-  MERMAID_SRC = '/plugins/text-diagram/assets/static/mermaid.min.js'
-  rerenderTimer = null
+  cfg = window.MoesoraConfig or {}
+  base = (cfg.assetBase or '/assets/').replace(/\/+$/, '')
+  MERMAID_SRC = base + '/lib/mermaid/mermaid.min.js'
 
-  getDiagrams = ->
-    document.querySelectorAll SELECTOR
+  getDiagrams = -> document.querySelectorAll SELECTOR
+  hasDiagram = -> !!document.querySelector SELECTOR
 
-  hasDiagram = ->
-    !!document.querySelector SELECTOR
-
-  prepareDiagrams = (reset) ->
-    nodes = getDiagrams()
-    Array::forEach.call nodes, (el) ->
-      if !el.dataset.moeMermaidSource
-        el.dataset.moeMermaidSource = (el.textContent or '').trim()
-      if reset and el.dataset.moeMermaidSource
-        el.textContent = el.dataset.moeMermaidSource
-        el.removeAttribute 'data-processed'
+  cacheSources = ->
+    Array::forEach.call getDiagrams(), (el) ->
+      el.dataset.moeSrc = (el.textContent or '').trim() if !el.dataset.moeSrc
       return
-    nodes
+    return
 
   waitForMermaid = ->
     return Promise.resolve() if window.mermaid
-    return window.__moeTextDiagramMermaidPromise if window.__moeTextDiagramMermaidPromise
-
-    window.__moeTextDiagramMermaidPromise = new Promise (resolve, reject) ->
+    return window.__moeMermaidPromise if window.__moeMermaidPromise
+    window.__moeMermaidPromise = new Promise (resolve, reject) ->
       settled = false
       timer = null
       timeout = null
-
       finish = ->
         return if settled or !window.mermaid
         settled = true
@@ -474,7 +465,6 @@ do ->
         clearTimeout timeout if timeout
         resolve()
         return
-
       fail = ->
         return if settled
         settled = true
@@ -482,132 +472,47 @@ do ->
         clearTimeout timeout if timeout
         reject()
         return
-
-      scripts = document.querySelectorAll 'script[src*="/plugins/text-diagram/assets/static/mermaid.min.js"]'
-      if !scripts.length
-        script = document.createElement('script')
+      existing = document.querySelector 'script[data-moe-mermaid]'
+      if existing
+        existing.addEventListener 'load', finish, once: true
+        existing.addEventListener 'error', fail, once: true
+      else
+        script = document.createElement 'script'
         script.defer = true
         script.src = MERMAID_SRC
-        script.setAttribute 'data-moe-text-diagram', 'mermaid'
+        script.setAttribute 'data-moe-mermaid', '1'
+        script.addEventListener 'load', finish, once: true
+        script.addEventListener 'error', fail, once: true
         document.head.appendChild script
-        scripts = [script]
-
-      Array::forEach.call scripts, (s) ->
-        s.addEventListener 'load', finish, once: true
-        s.addEventListener 'error', fail, once: true
-        return
-
       timer = setInterval finish, 100
       timeout = setTimeout fail, 12000
       return
+    window.__moeMermaidPromise
 
-    window.__moeTextDiagramMermaidPromise
+  themeName = ->
+    if document.documentElement.classList.contains('dark') then 'dark' else 'default'
 
-  resolveColor = (value, fallback) ->
-    return fallback unless document.body
-    probe = document.createElement('span')
-    probe.style.cssText = 'position:absolute;left:-9999px;top:-9999px;visibility:hidden;color:' + fallback
-    document.body.appendChild probe
-    probe.style.color = value
-    resolved = getComputedStyle(probe).color
-    probe.remove()
-    resolved or fallback
+  # 每次渲染都用「缓存的原始源码 + 当前主题指令」重建，指令能绕过 mermaid 全局主题缓存
+  applyDiagrams = ->
+    Array::forEach.call getDiagrams(), (el) ->
+      src = el.dataset.moeSrc
+      unless src
+        src = (el.textContent or '').trim()
+        el.dataset.moeSrc = src
+      el.textContent = '%%{init: {"theme":"' + themeName() + '"}}%%\n' + src
+      el.removeAttribute 'data-processed'
+      return
+    return
 
-  themeVar = (styles, name, fallback) ->
-    raw = (styles.getPropertyValue(name) or '').trim()
-    resolveColor (if raw then raw else fallback), fallback
-
-  buildMermaidConfig = ->
-    rootStyle = getComputedStyle document.documentElement
-    bodyStyle = if document.body then getComputedStyle(document.body) else null
-    dark = document.documentElement.classList.contains('dark')
-    theme = themeVar rootStyle, '--moe-theme', '#f9a8d4'
-    text = themeVar rootStyle, '--moe-text', if dark then '#ece8f0' else '#3a3340'
-    card = themeVar rootStyle, '--moe-card', if dark then '#2a2533' else '#ffffff'
-    bg = themeVar rootStyle, '--moe-bg', if dark then '#18151f' else '#fff7fb'
-    bg2 = themeVar rootStyle, '--moe-bg-2', if dark then '#221d2c' else '#fff1f7'
-    border = themeVar rootStyle, '--moe-border', theme
-    muted = themeVar rootStyle, '--moe-muted', if dark then '#9a90a8' else '#9a8fa6'
-    danger = '#fb7185'
-    font = if bodyStyle and bodyStyle.fontFamily then bodyStyle.fontFamily else '"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif'
-    startOnLoad: false
-    theme: 'base'
-    themeVariables:
-      background: bg
-      primaryColor: card
-      primaryBorderColor: theme
-      primaryTextColor: text
-      secondaryColor: bg2
-      secondaryBorderColor: border
-      secondaryTextColor: text
-      tertiaryColor: bg
-      tertiaryBorderColor: border
-      tertiaryTextColor: text
-      mainBkg: card
-      nodeBkg: card
-      nodeBorder: theme
-      nodeTextColor: text
-      clusterBkg: bg2
-      clusterBorder: border
-      titleColor: text
-      edgeLabelBackground: card
-      lineColor: theme
-      defaultLinkColor: theme
-      textColor: text
-      fontFamily: font
-      noteBkgColor: bg2
-      noteBorderColor: border
-      noteTextColor: text
-      actorBkg: card
-      actorBorder: theme
-      actorTextColor: text
-      actorLineColor: theme
-      signalColor: text
-      signalTextColor: text
-      labelBoxBkgColor: bg2
-      labelBoxBorderColor: border
-      labelTextColor: text
-      loopTextColor: text
-      activationBkgColor: bg2
-      activationBorderColor: theme
-      sequenceNumberColor: text
-      sectionBkgColor: bg2
-      altSectionBkgColor: card
-      sectionBkgColor2: bg
-      taskBkgColor: card
-      taskBorderColor: border
-      taskTextColor: text
-      taskTextOutsideColor: text
-      taskTextClickableColor: theme
-      activeTaskBkgColor: bg2
-      activeTaskBorderColor: theme
-      gridColor: border
-      doneTaskBkgColor: bg2
-      doneTaskBorderColor: muted
-      critBkgColor: bg2
-      critBorderColor: danger
-      todayLineColor: theme
-      personBkg: card
-      personBorder: theme
-      labelBackgroundColor: bg2
-      stateBkg: card
-      stateBorder: theme
-      stateLabelColor: text
-      classText: text
-      requirementBackground: card
-      requirementBorderColor: theme
-      requirementTextColor: text
-      relationColor: theme
-      relationLabelBackground: card
-      relationLabelColor: text
-
-  run = (reset = false) ->
+  doRender = ->
     return unless hasDiagram()
-    prepareDiagrams reset
+    applyDiagrams()
     waitForMermaid().then(->
       return unless window.mermaid
       try
-        window.mermaid.initialize buildMermaidConfig()
+        window.mermaid.initialize
+          startOnLoad: false
+          theme: themeName()
         result = window.mermaid.run
           querySelector: SELECTOR
         if result and typeof result.catch == 'function'
@@ -617,23 +522,24 @@ do ->
     ).catch ->
     return
 
+  cacheSources()
+
+  rerenderTimer = null
   rerender = ->
     clearTimeout rerenderTimer if rerenderTimer
     rerenderTimer = setTimeout (->
       rerenderTimer = null
-      run true
+      doRender()
       return
-    ), 0
+    ), 60
     return
 
-  # 主题脚本执行时内容已解析到当前位置，先缓存源码；否则插件自己的 DOMContentLoaded 渲染会把源码替换成 SVG。
-  prepareDiagrams false
   document.addEventListener 'moesora:theme-change', rerender
-  window.MoesoraTextDiagramInit = run
+  window.MoesoraTextDiagramInit = doRender
   if document.readyState == 'complete'
-    setTimeout run, 0
+    setTimeout doRender, 0
   else
-    window.addEventListener 'load', run
+    window.addEventListener 'load', doRender
   return
 
 window.MoesoraInitPage = ->

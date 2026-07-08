@@ -48,6 +48,7 @@
   <script th:inline="javascript">
     /*<![CDATA[*/
     window.MoesoraConfig = {
+      assetBase: /*[[@{/assets/}]]*/ "/assets/",
       hiddenTitle: /*[[${theme.config.basic?.document_hidden_title}]]*/ "(つ_<)~ 你去哪儿了！",
       visibleTitle: /*[[${theme.config.basic?.document_visible_title}]]*/ "(*´∇｀*) 欢迎回来！",
       loadingText: /*[[${theme.config.loading?.loading_text}]]*/ "少女祈祷中...",
