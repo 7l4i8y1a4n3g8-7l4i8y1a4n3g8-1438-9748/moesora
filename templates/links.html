@@ -5,22 +5,37 @@
 <th:block th:fragment="content">
   <div class="moe-page-head moe-card">
     <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('link')}"></th:block></span><span>友情链接</span></h1>
+    <p class="moe-links-sub" id="moe-links-hitokoto">与这些有趣的灵魂相遇 ♪(´▽｀)</p>
+    <div class="moe-links-stats">
+      <span class="moe-links-stat"><b id="moe-links-total">0</b> 位朋友</span>
+      <span class="moe-links-stat"><b id="moe-links-groups">0</b> 个分组</span>
+    </div>
   </div>
 
-  <th:block th:each="group : ${groups}">
-    <div class="moe-card moe-link-group">
-      <h3 class="moe-card-title" th:text="${group.spec.displayName}">分组</h3>
+  <th:block th:each="group,gStat : ${groups}">
+    <div class="moe-card moe-link-group" th:classappend="${'moe-accent-' + (gStat.index % 5)}">
+      <div class="moe-link-group-head">
+        <h3 class="moe-card-title" th:text="${group.spec.displayName}">分组</h3>
+        <span class="moe-link-count" th:text="${#lists.size(group.links)}">0</span>
+      </div>
       <div class="moe-link-list">
-        <a th:each="link : ${group.links}" class="moe-link-item"
-           th:href="${link.spec.url}" target="_blank" rel="noopener">
-          <img class="moe-link-logo"
-               th:if="${!#strings.isEmpty(link.spec.logo)}"
-               th:src="${link.spec.logo}"
-               th:alt="${link.spec.displayName}"/>
-          <div class="moe-link-meta">
-            <div class="moe-link-name" th:text="${link.spec.displayName}">站点</div>
-            <div class="moe-link-desc" th:text="${link.spec.description}">描述</div>
-          </div>
+        <a th:each="link,lStat : ${group.links}" class="moe-link-item"
+           th:style="|animation-delay:${lStat.index * 60}ms|"
+           th:href="${link.spec.url}" target="_blank" rel="noopener"
+           th:title="${link.spec.description}">
+          <span class="moe-link-logo-wrap">
+            <img class="moe-link-logo"
+                 th:if="${!#strings.isEmpty(link.spec.logo)}"
+                 th:src="${link.spec.logo}" th:alt="${link.spec.displayName}" loading="lazy"/>
+            <span th:if="${#strings.isEmpty(link.spec.logo)}"
+                  th:classappend="${'moe-avatar-c' + (lStat.index % 6)}"
+                  class="moe-link-logo moe-link-logo-fallback"
+                  th:text="${#strings.isEmpty(link.spec.displayName) ? '?' : #strings.toUpperCase(#strings.substring(link.spec.displayName,0,1))}">A</span>
+          </span>
+          <span class="moe-link-meta">
+            <span class="moe-link-name" th:text="${link.spec.displayName}">站点</span>
+            <span class="moe-link-desc" th:text="${link.spec.description}">描述</span>
+          </span>
         </a>
       </div>
     </div>
@@ -29,6 +44,20 @@
   <div th:if="${groups == null or #lists.isEmpty(groups)}" class="moe-card moe-empty">
     还没有友链 (｡･ω･｡)
   </div>
+
+  <div class="moe-card moe-links-apply">
+    <h3 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('heart')}"></th:block></span>想和我交换友链?</h3>
+    <p>在留言墙或任意文章评论区留下你的<b> 站点名称 / 链接 / 头像 / 一句话描述 </b>，我看到后会尽快添加~ (๑•̀ㅂ•́)و✧</p>
+  </div>
+
+  <script>
+  (function(){
+    var lines=["与这些有趣的灵魂相遇 ♪(´▽｀)","点击头像，去看看 TA 们的小世界~","这里是我珍藏的宝藏站点 (〇′ﾂ〇′)も","愿你也能找到同频的朋友 ✿","缘分让我们在此相遇 (｡･ω･｡)ﾉ♡","友谊的小船，永不翻船 ⚓","山水一程，皆是朋友 ✿","遇见即是缘，感谢你来过 (´▽｀)ノ","这些是我在互联网上的好邻居~","点开一个，发现一个新世界 ✨","志同道合，不期而遇 ♪","愿我们都被世界温柔以待 (｡◕‿◕｡)","互相点亮，彼此照耀 ⋆｡°✩","一起在赛博世界里冒险吧 🚀","常来串门呀，门一直开着~","友链虽小，情谊满满 (◍•ᴗ•◍)"];
+    var h=document.getElementById('moe-links-hitokoto'); if(h){h.textContent=lines[Math.floor(Math.random()*lines.length)];}
+    var t=document.getElementById('moe-links-total'); if(t){t.textContent=document.querySelectorAll('.moe-link-item').length;}
+    var g=document.getElementById('moe-links-groups'); if(g){g.textContent=document.querySelectorAll('.moe-link-group').length;}
+  })();
+  </script>
 </th:block>
 </body>
 </html>

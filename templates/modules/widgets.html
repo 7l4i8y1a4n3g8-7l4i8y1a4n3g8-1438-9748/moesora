@@ -116,7 +116,10 @@
   <!-- 友链 -->
   <section th:case="'links'" class="moe-card" th:if="${pluginFinder.available('PluginLinks')}"
            th:with="linkGroups=${linkFinder.groupBy()}">
-    <h4 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('link')}"></th:block></span>友链</h4>
+    <div class="moe-cat-head">
+      <h4 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('link')}"></th:block></span>友链</h4>
+      <a class="moe-cat-more" th:href="@{/links}">更多 »</a>
+    </div>
     <div class="moe-friend-list">
       <th:block th:each="group : ${linkGroups}">
         <a th:each="link : ${group.links}" class="moe-friend-item"
