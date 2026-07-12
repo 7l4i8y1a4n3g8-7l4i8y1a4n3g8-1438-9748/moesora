@@ -3,13 +3,18 @@
       th:replace="~{modules/layout :: layout(content=~{::content}, hero=~{}, isHome=false)}">
 <body>
 <th:block th:fragment="content">
-  <div class="moe-page-head moe-card">
-    <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('folder')}"></th:block></span><span>全部分类</span></h1>
+  <div class="moe-page-head moe-card moe-fancy-head">
+    <div class="moe-halo"><b class="moe-halo-num">0</b><small>个分类</small></div>
+    <div class="moe-fancy-head-text">
+      <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('folder')}"></th:block></span><span>全部分类</span></h1>
+      <p class="moe-page-sub">按主题分门别类，找文章更方便 📚</p>
+    </div>
   </div>
   <div class="moe-card">
     <div class="moe-catpage">
       <a th:each="category, it : ${categories}" class="moe-catpage-tile"
          th:classappend="${'moe-catpage-c' + (it.index % 5)}"
+         th:style="|animation-delay:${it.index * 50}ms|"
          th:href="${category.status.permalink}">
         <span class="moe-catpage-name" th:text="${category.spec.displayName}">分类</span>
         <span class="moe-catpage-count" th:if="${category.status?.postCount != null}"
@@ -18,6 +23,7 @@
     </div>
     <p th:if="${#lists.isEmpty(categories)}" class="moe-empty">还没有分类</p>
   </div>
+  <script>(function(){var n=document.querySelector('.moe-halo-num');if(n)n.textContent=document.querySelectorAll('.moe-catpage-tile').length;})();</script>
 </th:block>
 </body>
 </html>

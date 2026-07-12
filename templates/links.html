@@ -3,12 +3,11 @@
       th:replace="~{modules/layout :: layout(content=~{::content}, hero=~{}, isHome=false)}">
 <body>
 <th:block th:fragment="content">
-  <div class="moe-page-head moe-card">
-    <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('link')}"></th:block></span><span>友情链接</span></h1>
-    <p class="moe-links-sub" id="moe-links-hitokoto">与这些有趣的灵魂相遇 ♪(´▽｀)</p>
-    <div class="moe-links-stats">
-      <span class="moe-links-stat"><b id="moe-links-total">0</b> 位朋友</span>
-      <span class="moe-links-stat"><b id="moe-links-groups">0</b> 个分组</span>
+  <div class="moe-page-head moe-card moe-fancy-head">
+    <div class="moe-halo"><b class="moe-halo-num">0</b><small>位朋友</small></div>
+    <div class="moe-fancy-head-text">
+      <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('link')}"></th:block></span><span>友情链接</span></h1>
+      <p class="moe-links-sub" id="moe-links-hitokoto">与这些有趣的灵魂相遇 ♪(´▽｀)</p>
     </div>
   </div>
 
@@ -54,8 +53,8 @@
   (function(){
     var lines=["与这些有趣的灵魂相遇 ♪(´▽｀)","点击头像，去看看 TA 们的小世界~","这里是我珍藏的宝藏站点 (〇′ﾂ〇′)も","愿你也能找到同频的朋友 ✿","缘分让我们在此相遇 (｡･ω･｡)ﾉ♡","友谊的小船，永不翻船 ⚓","山水一程，皆是朋友 ✿","遇见即是缘，感谢你来过 (´▽｀)ノ","这些是我在互联网上的好邻居~","点开一个，发现一个新世界 ✨","志同道合，不期而遇 ♪","愿我们都被世界温柔以待 (｡◕‿◕｡)","互相点亮，彼此照耀 ⋆｡°✩","一起在赛博世界里冒险吧 🚀","常来串门呀，门一直开着~","友链虽小，情谊满满 (◍•ᴗ•◍)"];
     var h=document.getElementById('moe-links-hitokoto'); if(h){h.textContent=lines[Math.floor(Math.random()*lines.length)];}
-    var t=document.getElementById('moe-links-total'); if(t){t.textContent=document.querySelectorAll('.moe-link-item').length;}
-    var g=document.getElementById('moe-links-groups'); if(g){g.textContent=document.querySelectorAll('.moe-link-group').length;}
+    var n=document.querySelector('.moe-halo-num'); if(n){n.textContent=document.querySelectorAll('.moe-link-item').length;}
+    
   })();
   </script>
 </th:block>

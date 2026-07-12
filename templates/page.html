@@ -11,7 +11,9 @@
                           : ((#strings.contains(pt,'留言') or #strings.contains(pt,'联系') or #strings.containsIgnoreCase(pt,'message') or #strings.containsIgnoreCase(pt,'contact')) ? 'mail'
                           : ((#strings.contains(pt,'我的') or #strings.contains(pt,'作者') or #strings.contains(pt,'简介')) ? 'user'
                           : 'doc')))}">
-    <div class="moe-page-head">
+    <div class="moe-page-head moe-fancy-head">
+      <div class="moe-halo moe-halo-deco"><span class="moe-halo-emoji">🌸</span><span class="moe-halo-spark">✨</span><span class="moe-halo-spark2">✨</span></div>
+      <div class="moe-fancy-head-text">
       <h1 class="moe-page-title">
         <span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon(${pkey})}"></th:block></span>
         <span th:text="${pt}">页面标题</span>
@@ -25,6 +27,7 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
           <span th:text="${singlePage.stats.visit}">0</span>
         </span>
+      </div>
       </div>
     </div>
     <div class="moe-post-content" th:utext="${singlePage.content.content}">正文</div>

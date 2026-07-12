@@ -3,8 +3,12 @@
       th:replace="~{modules/layout :: layout(content=~{::content}, hero=~{}, isHome=false)}">
 <body>
 <th:block th:fragment="content">
-  <div class="moe-page-head moe-card">
-    <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('archive')}"></th:block></span><span>归档</span></h1>
+  <div class="moe-page-head moe-card moe-fancy-head">
+    <div class="moe-halo"><b class="moe-halo-num">0</b><small>篇文章</small></div>
+    <div class="moe-fancy-head-text">
+      <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('archive')}"></th:block></span><span>时光归档</span></h1>
+      <p class="moe-page-sub">一路走来的点点滴滴，都在这里 ⏳</p>
+    </div>
   </div>
 
   <div th:each="archive : ${archives.items}" class="moe-card moe-archive">
@@ -12,7 +16,8 @@
     <div class="moe-timeline moe-archive-tl">
       <th:block th:each="month : ${archive.months}">
         <div class="moe-tl-item" th:each="post, it : ${month.posts}"
-             th:classappend="${'moe-arc-c' + (it.index % 5)}">
+             th:classappend="${'moe-arc-c' + (it.index % 5)}"
+             th:style="|animation-delay:${it.index * 45}ms|">
           <span class="moe-tl-dot"></span>
           <div class="moe-tl-date" th:if="${post.spec.publishTime != null}"
                th:text="${#temporals.format(post.spec.publishTime, 'MM-dd', 'Asia/Shanghai')}">00-00</div>
@@ -24,6 +29,7 @@
 
   <p th:if="${#lists.isEmpty(archives.items)}" class="moe-empty">还没有文章可归档 (｡･ω･｡)</p>
   <div th:replace="~{modules/pagination :: pagination(${archives})}"></div>
+  <script>(function(){var n=document.querySelector('.moe-halo-num');if(n)n.textContent=document.querySelectorAll('.moe-tl-item').length;})();</script>
 </th:block>
 </body>
 </html>

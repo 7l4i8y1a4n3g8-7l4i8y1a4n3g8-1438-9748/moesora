@@ -3,21 +3,78 @@
       th:replace="~{modules/layout :: layout(content=~{::content}, hero=~{}, isHome=false)}">
 <body>
 <th:block th:fragment="content">
-  <div class="moe-page-head moe-card">
-    <h1 class="moe-page-title">
-      <span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('tag')}"></th:block></span>
-      <span>全部标签</span>
-    </h1>
-  </div>
-  <div class="moe-card">
-    <div class="moe-tag-cloud">
-      <a th:each="tag : ${tags}" class="moe-chip"
-         th:href="${tag.status.permalink}"
-         th:style="${tag.spec.color != null and tag.spec.color != '#ffffff'} ? 'color:' + ${tag.spec.color} + ';border-color:' + ${tag.spec.color} : ''"
-         th:text="'# ' + ${tag.spec.displayName}">标签</a>
-      <p th:if="${#lists.isEmpty(tags)}" class="moe-empty">还没有标签</p>
+  <div class="moe-page-head moe-card moe-fancy-head">
+    <div class="moe-halo"><b class="moe-halo-num">0</b><small>个标签</small></div>
+    <div class="moe-fancy-head-text">
+      <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('tag')}"></th:block></span><span>标签星云</span></h1>
+      <p class="moe-page-sub">在这片星海里，点亮你感兴趣的标签 ✨</p>
     </div>
   </div>
+
+  <div class="moe-card">
+    <div class="moe-tag-nebula">
+      <a th:each="tag,st : ${tags}"
+         th:with="pc=${tag.status?.postCount ?: 0},hasColor=${tag.spec.color != null and tag.spec.color != '#ffffff'}"
+         class="moe-tag-star"
+         th:classappend="|${hasColor ? '' : 'moe-star-c' + (st.index % 8)} ${pc ge 11 ? 'moe-star-s4' : (pc ge 6 ? 'moe-star-s3' : (pc ge 3 ? 'moe-star-s2' : (pc ge 1 ? 'moe-star-s1' : 'moe-star-s0')))}|"
+         th:style="|animation-delay:${st.index * 45}ms;${hasColor ? '--tc:' + tag.spec.color : ''}|"
+         th:href="${tag.status.permalink}"
+         th:title="${tag.spec.displayName}">
+        <span class="moe-tag-inner">
+          <span class="moe-tag-name" th:text="${tag.spec.displayName}">标签</span>
+          <span class="moe-tag-num" th:text="${tag.status?.postCount} ?: 0">0</span>
+        </span>
+      </a>
+      <p th:if="${#lists.isEmpty(tags)}" class="moe-empty">还没有标签 (｡･ω･｡)</p>
+    </div>
+  </div>
+  <script>
+(function(){
+  var box=document.querySelector('.moe-tag-nebula');
+  if(!box) return;
+  var stars=[].slice.call(box.querySelectorAll('.moe-tag-star'));
+  var hn=document.querySelector('.moe-halo-num'); if(hn) hn.textContent=stars.length;
+  if(!stars.length) return;
+  function layout(){
+    box.classList.remove('is-scattered');
+    var W=box.clientWidth; if(!W) return;
+    var sizes=stars.map(function(s){return {w:s.offsetWidth,h:s.offsetHeight};});
+    box.classList.add('is-scattered');
+    var H=Math.max(320, Math.ceil(stars.length/3)*72+120);
+    box.style.height=H+'px';
+    var placed=[];
+    stars.forEach(function(s,i){
+      var w=sizes[i].w,h=sizes[i].h,x,y,ok,tries=0;
+      do{
+        x=Math.random()*(W-w-24)+12;
+        y=Math.random()*(H-h-24)+12;
+        ok=true;
+        for(var j=0;j<placed.length;j++){var p=placed[j];
+          if(x<p.x+p.w+10 && x+w+10>p.x && y<p.y+p.h+8 && y+h+8>p.y){ok=false;break;}}
+        tries++;
+      }while(!ok && tries<50);
+      placed.push({x:x,y:y,w:w,h:h});
+      s.style.left=Math.round(x)+'px'; s.style.top=Math.round(y)+'px';
+      s.style.animationDelay=(Math.random()*3.5).toFixed(2)+'s';
+    });
+  }
+  layout();
+  var t; window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(layout,200);});
+  // 鼠标视差:每个标签一个深度系数，鼠标在星云内移动时整片星空产生纵深流动
+  var depths=stars.map(function(){return 6+Math.random()*20;});
+  box.addEventListener('mousemove',function(e){
+    var r=box.getBoundingClientRect();
+    var mx=(e.clientX-r.left)/r.width-0.5, my=(e.clientY-r.top)/r.height-0.5;
+    stars.forEach(function(s,i){
+      s.style.setProperty('--px',(mx*depths[i]*-2).toFixed(1)+'px');
+      s.style.setProperty('--py',(my*depths[i]*-2).toFixed(1)+'px');
+    });
+  });
+  box.addEventListener('mouseleave',function(){
+    stars.forEach(function(s){s.style.setProperty('--px','0px');s.style.setProperty('--py','0px');});
+  });
+})();
+</script>
 </th:block>
 </body>
 </html>
