@@ -4,14 +4,18 @@
 <body>
 <th:block th:fragment="content"
           th:with="palette=${ {'#f9a8d4','#a5d8ff','#b2f2bb','#ffd8a8','#d0bfff','#ffc9c9','#99e9f2','#ffec99','#eebefa','#c0eb75'} }">
-  <div class="moe-page-head moe-card">
-    <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('chat')}"></th:block></span><span>瞬间</span></h1>
+  <div class="moe-page-head moe-card moe-fancy-head">
+    <div class="moe-halo"><b class="moe-halo-num">0</b><small>条瞬间</small></div>
+    <div class="moe-fancy-head-text">
+      <h1 class="moe-page-title"><span class="moe-page-title-icon"><th:block th:replace="~{modules/icons :: icon('chat')}"></th:block></span><span>此刻心情</span></h1>
+      <p class="moe-page-sub">记录生活里那些细小而美好的瞬间 ☁️</p>
+    </div>
   </div>
 
   <div class="moe-card moe-moment-wrap" th:if="${moments != null and !#lists.isEmpty(moments.items)}">
     <div class="moe-timeline">
-      <article th:each="moment,ms : ${moments.items}" class="moe-tl-item"
-               th:style="'--tl-c:' + ${palette[ms.index % palette.size()]}">
+      <article th:each="moment,ms : ${moments.items}" class="moe-tl-item moe-mo-item"
+               th:style="|--tl-c:${palette[ms.index % palette.size()]};animation-delay:${ms.index * 55}ms|">
         <span class="moe-tl-dot" aria-hidden="true"></span>
         <div class="moe-tl-card">
           <time class="moe-tl-time" th:if="${moment.spec.releaseTime != null}"
@@ -50,8 +54,9 @@
   </div>
 
   <div class="moe-card" th:if="${moments == null or #lists.isEmpty(moments.items)}">
-    <p class="moe-empty">还没有瞬间 (｡･ω･｡)</p>
+    <p class="moe-empty">还没有瞬间，等待第一朵浪花 (｡･ω･｡)ﾉ♡</p>
   </div>
+  <script>(function(){var n=document.querySelector('.moe-halo-num');if(n)n.textContent=document.querySelectorAll('.moe-mo-item').length;})();</script>
 </th:block>
 </body>
 </html>
