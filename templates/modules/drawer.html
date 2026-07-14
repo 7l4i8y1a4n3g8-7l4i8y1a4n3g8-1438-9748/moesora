@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="drawer">
+  <div class="moe-drawer-mask" id="moe-drawer-mask"></div>
+  <aside class="moe-drawer" id="moe-drawer"
+         th:with="primary=${menuFinder.getPrimary()},
+                  postTotal=${postFinder.list(1,1).total},
+                  catTotal=${categoryFinder.list(1,1).total},
+                  tagTotal=${tagFinder.list(1,1).total},
+                  pAvatar=${!#strings.isEmpty(theme.config.sidebar?.profile_avatar) ? theme.config.sidebar.profile_avatar : site.logo}">
+    <div class="moe-drawer-wrap">
+
+      <!-- 个人信息(与侧栏一致) -->
+      <div class="moe-drawer-card moe-drawer-profile">
+        <img class="moe-drawer-avatar" th:src="${pAvatar} ?: @{/assets/dist/logo.svg}" alt="avatar"/>
+        <h3 class="moe-drawer-name" th:text="${!#strings.isEmpty(theme.config.basic?.name_profile) ? theme.config.basic.name_profile : (!#strings.isEmpty(theme.config.basic?.blog_name) ? theme.config.basic.blog_name : (site.title ?: 'Moesora'))}">Moesora</h3>
+        <p class="moe-drawer-bio" th:text="${!#strings.isEmpty(theme.config.sidebar?.profile_signature) ? theme.config.sidebar.profile_signature : site.subtitle}">少女祈祷中...</p>
+        <p class="moe-drawer-loc" th:if="${!#strings.isEmpty(theme.config.sidebar?.profile_location)}">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span th:text="${theme.config.sidebar.profile_location}">位置</span>
+        </p>
+        <div class="moe-drawer-stats">
+          <a class="moe-dstat" th:href="@{/archives}"><b th:text="${postTotal}">0</b><span>文章</span></a>
+          <a class="moe-dstat" th:href="@{/categories}"><b th:text="${catTotal}">0</b><span>分类</span></a>
+          <a class="moe-dstat" th:href="@{/tags}"><b th:text="${tagTotal}">0</b><span>标签</span></a>
+        </div>
+        <div class="moe-drawer-social" th:if="${theme.config.sidebar?.social_links != null and !#lists.isEmpty(theme.config.sidebar.social_links)}">
+          <a th:each="s : ${theme.config.sidebar.social_links}" class="moe-social-link"
+             th:classappend="'is-' + (${s.platform} ?: 'link')"
+             th:href="${s.url}" th:title="${s.name}" target="_blank" rel="noopener">
+            <th:block th:replace="~{modules/icons :: social(${s.platform})}"></th:block>
+          </a>
+        </div>
+      </div>
+
+      <!-- 搜索框 -->
+      <div class="moe-drawer-search">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="moe-drawer-search-input" placeholder="搜索文章..." autocomplete="off"/>
+        <div class="moe-drawer-search-panel" id="moe-drawer-search-panel" hidden></div>
+      </div>
+
+      <!-- 导航(无标题,有子项则折叠展开) -->
+      <div class="moe-drawer-card moe-drawer-nav">
+        <th:block th:if="${primary != null and primary.menuItems != null and !primary.menuItems.isEmpty()}">
+          <div th:each="item : ${primary.menuItems}" class="moe-dnav-item"
+               th:classappend="${item.children != null and !item.children.isEmpty()} ? ' has-sub' : ''">
+            <div class="moe-dnav-row"
+                 th:with="nm=${item.status.displayName},
+                          ikey=${((#strings.contains(nm,'首页') or #strings.containsIgnoreCase(nm,'home')) ? 'home' : ((#strings.contains(nm,'归档') or #strings.containsIgnoreCase(nm,'archive')) ? 'archive' : ((#strings.contains(nm,'分类') or #strings.containsIgnoreCase(nm,'categor')) ? 'folder' : ((#strings.contains(nm,'标签') or #strings.containsIgnoreCase(nm,'tag')) ? 'tag' : ((#strings.contains(nm,'瞬间') or #strings.contains(nm,'动态') or #strings.containsIgnoreCase(nm,'moment')) ? 'chat' : ((#strings.contains(nm,'留言') or #strings.containsIgnoreCase(nm,'message')) ? 'mail' : ((#strings.contains(nm,'友链') or #strings.containsIgnoreCase(nm,'link')) ? 'link' : ((#strings.contains(nm,'关于') or #strings.containsIgnoreCase(nm,'about')) ? 'heart' : 'sparkle'))))))))}">
+              <a class="moe-dnav-link" th:href="${item.status.href}">
+                <span class="moe-dnav-ico"><th:block th:replace="~{modules/icons :: icon(${ikey})}"></th:block></span>
+                <span class="moe-dnav-text" th:text="${nm}">菜单</span>
+              </a>
+              <button type="button" class="moe-dnav-caret" aria-label="展开"
+                      th:if="${item.children != null and !item.children.isEmpty()}">
+                <svg viewBox="0 0 12 8" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 2 6 6.2 10.5 2"/></svg>
+              </button>
+            </div>
+            <div class="moe-dnav-sub" th:if="${item.children != null and !item.children.isEmpty()}">
+              <a th:each="sub : ${item.children}" class="moe-dnav-sublink"
+                 th:href="${sub.status.href}"
+                 th:with="snm=${sub.status.displayName},
+                          sikey=${((#strings.contains(snm,'首页') or #strings.containsIgnoreCase(snm,'home')) ? 'home' : ((#strings.contains(snm,'归档') or #strings.containsIgnoreCase(snm,'archive')) ? 'archive' : ((#strings.contains(snm,'分类') or #strings.containsIgnoreCase(snm,'categor')) ? 'folder' : ((#strings.contains(snm,'标签') or #strings.containsIgnoreCase(snm,'tag')) ? 'tag' : ((#strings.contains(snm,'瞬间') or #strings.contains(snm,'动态') or #strings.containsIgnoreCase(snm,'moment')) ? 'chat' : ((#strings.contains(snm,'留言') or #strings.containsIgnoreCase(snm,'message')) ? 'mail' : ((#strings.contains(snm,'友链') or #strings.containsIgnoreCase(snm,'link')) ? 'link' : ((#strings.contains(snm,'关于') or #strings.containsIgnoreCase(snm,'about')) ? 'heart' : 'sparkle'))))))))}">
+                <span class="moe-dnav-subico"><th:block th:replace="~{modules/icons :: icon(${sikey})}"></th:block></span>
+                <span th:text="${snm}">子项</span>
+              </a>
+            </div>
+          </div>
+        </th:block>
+        <a th:unless="${primary != null and primary.menuItems != null and !primary.menuItems.isEmpty()}"
+           class="moe-dnav-link" th:href="@{/}"><span class="moe-dnav-text">首页</span></a>
+      </div>
+
+      <!-- 登录模块 -->
+      <div class="moe-drawer-card moe-drawer-user" id="moe-drawer-user"
+           th:with="currentUser=${contributorFinder.getContributor(#authentication.name)},
+                    isLoggedIn=${currentUser != null and !#strings.equals(currentUser.name, 'anonymousUser')},
+                    loginUrl=${!#strings.isEmpty(theme.config.basic?.navbar_login_url) ? theme.config.basic.navbar_login_url : '/console'}">
+        <a th:unless="${isLoggedIn}" class="moe-duser-login" th:href="@{${loginUrl}}">
+          <span class="moe-duser-ico"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
+          <span>登录</span>
+        </a>
+        <th:block th:if="${isLoggedIn}">
+          <button type="button" class="moe-duser-card" id="moe-duser-toggle">
+            <img th:if="${!#strings.isEmpty(currentUser.avatar)}" class="moe-duser-avatar" th:src="${currentUser.avatar}" th:alt="${currentUser.displayName}"/>
+            <span th:unless="${!#strings.isEmpty(currentUser.avatar)}" class="moe-duser-avatar moe-duser-avatar-fb"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span>
+            <span class="moe-duser-meta">
+              <span class="moe-duser-name" th:text="${!#strings.isEmpty(currentUser.displayName) ? currentUser.displayName : currentUser.name}">用户</span>
+              <span class="moe-duser-slug" th:text="${currentUser.name}">username</span>
+            </span>
+            <span class="moe-duser-caret"><svg viewBox="0 0 12 8" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 2 6 6.2 10.5 2"/></svg></span>
+          </button>
+          <div class="moe-duser-panel">
+            <a class="moe-duser-item" th:href="@{/console}">
+              <span class="moe-duser-ico"><th:block th:replace="~{modules/icons :: icon('doc')}"></th:block></span><span>控制台</span>
+            </a>
+            <a class="moe-duser-item" th:href="@{/uc}">
+              <span class="moe-duser-ico"><th:block th:replace="~{modules/icons :: icon('user')}"></th:block></span><span>个人中心</span>
+            </a>
+            <form class="moe-duser-logout" method="post" th:action="@{/logout}" th:attr="data-redirect=@{/}">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+              <button class="moe-duser-item is-danger" type="submit">
+                <span class="moe-duser-ico"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18"/></svg></span><span>退出登录</span>
+              </button>
+            </form>
+          </div>
+        </th:block>
+      </div>
+    </div>
+  </aside>
+  <script th:inline="javascript">
+  (function(){
+    var drawer=document.getElementById("moe-drawer");
+    var mask=document.getElementById("moe-drawer-mask");
+    if(!drawer) return;
+    function clearSearch(){
+      var si=document.getElementById("moe-drawer-search-input");
+      var sp=document.getElementById("moe-drawer-search-panel");
+      if(si) si.value="";
+      if(sp){ sp.innerHTML=""; sp.hidden=true; }
+    }
+    function closeDrawer(){
+      document.documentElement.classList.remove("moe-drawer-open");
+      var bar=document.querySelector(".moe-navbar");
+      if(bar) bar.classList.remove("nav-open");
+      var t=document.getElementById("moe-nav-toggle");
+      if(t) t.setAttribute("aria-expanded","false");
+      var du=document.getElementById("moe-drawer-user");
+      if(du) du.classList.remove("open");
+      clearSearch();
+    }
+    /* 打开抽屉时重置为默认状态:滚回顶部、收起所有展开项、清空搜索 */
+    function resetDrawer(){
+      var wrap=drawer.querySelector(".moe-drawer-wrap");
+      if(wrap) wrap.scrollTop=0;
+      drawer.querySelectorAll(".moe-dnav-item.open").forEach(function(el){ el.classList.remove("open"); });
+      var du=document.getElementById("moe-drawer-user");
+      if(du) du.classList.remove("open");
+      clearSearch();
+    }
+    /* 监听 html 上的 moe-drawer-open 类:一旦被加上(汉堡打开),立即重置 */
+    var mo=new MutationObserver(function(){
+      if(document.documentElement.classList.contains("moe-drawer-open")) resetDrawer();
+    });
+    mo.observe(document.documentElement, { attributes:true, attributeFilter:["class"] });
+
+    /* 遮罩关闭 */
+    if(mask) mask.addEventListener("click", closeDrawer);
+    /* 导航折叠 */
+    drawer.querySelectorAll(".moe-dnav-caret").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.preventDefault(); e.stopPropagation();
+        var item=btn.closest(".moe-dnav-item");
+        if(item) item.classList.toggle("open");
+      });
+    });
+    /* 点导航链接关闭抽屉 */
+    drawer.querySelectorAll(".moe-dnav-link,.moe-dnav-sublink").forEach(function(a){
+      a.addEventListener("click", closeDrawer);
+    });
+    /* 登录模块折叠 */
+    var dut=document.getElementById("moe-duser-toggle");
+    var duBox=document.getElementById("moe-drawer-user");
+    if(dut && duBox){
+      dut.addEventListener("click", function(e){ e.preventDefault(); e.stopPropagation(); duBox.classList.toggle("open"); });
+    }
+    /* 搜索 */
+    var POSTS=[];
+    /*[# th:each="p : ${postFinder.list(1, 500).items}"]*/
+    POSTS.push({ t: /*[[${p.spec.title}]]*/ "", u: /*[[${p.status.permalink}]]*/ "" });
+    /*[/]*/
+    var si=document.getElementById("moe-drawer-search-input");
+    var sp=document.getElementById("moe-drawer-search-panel");
+    if(si && sp){
+      function esc(x){ var d=document.createElement("div"); d.textContent=x||""; return d.innerHTML; }
+      function hits(kw){ return POSTS.filter(function(p){ return (p.t||"").toLowerCase().indexOf(kw)>-1; }); }
+      function render(){
+        var kw=si.value.trim().toLowerCase();
+        if(!kw){ sp.hidden=true; sp.innerHTML=""; return; }
+        var list=hits(kw).slice(0,8);
+        if(!list.length){ sp.innerHTML='<div class="moe-search-empty">没有匹配的文章</div>'; sp.hidden=false; return; }
+        sp.innerHTML=list.map(function(p){ return '<a class="moe-search-item" href="'+p.u+'">'+esc(p.t)+'</a>'; }).join("");
+        sp.hidden=false;
+      }
+      si.addEventListener("input", render);
+      si.addEventListener("keydown", function(e){
+        if(e.key==="Enter"){ var h=hits(si.value.trim().toLowerCase())[0]; if(h){ closeDrawer(); location.href=h.u; } }
+      });
+      sp.addEventListener("click", function(e){
+        if(e.target.closest(".moe-search-item")) closeDrawer();
+      });
+    }
+  })();
+  </script>
+</th:block>
+</body>
+</html>

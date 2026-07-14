@@ -352,6 +352,31 @@ spec:
                 - { label: "分类", value: "categories" }
                 - { label: "标签云", value: "tags" }
                 - { label: "时间天气", value: "weather" }
+        - $formkit: repeater
+          name: mobile_modules
+          label: 移动端侧栏模块（拖动排序，删除某项即隐藏）
+          help: 单独控制手机端侧栏显示哪些模块及顺序；留空则沿用左栏+右栏的默认顺序
+          value:
+            - { module: "profile" }
+            - { module: "notice" }
+            - { module: "recent" }
+            - { module: "categories" }
+          children:
+            - $formkit: select
+              name: module
+              label: 模块
+              options:
+                - { label: "文章目录(仅文章页显示)", value: "toc" }
+                - { label: "个人信息卡", value: "profile" }
+                - { label: "公告", value: "notice" }
+                - { label: "恋爱墙", value: "love" }
+                - { label: "音乐播放器", value: "music" }
+                - { label: "关于", value: "about" }
+                - { label: "友链", value: "links" }
+                - { label: "最近文章", value: "recent" }
+                - { label: "分类", value: "categories" }
+                - { label: "标签云", value: "tags" }
+                - { label: "时间天气", value: "weather" }
         - $formkit: textarea
           name: notice_content
           label: 公告-内容
@@ -362,6 +387,12 @@ spec:
           label: 关于-内容
           help: 留空则用默认文案；支持 HTML
           value: ""
+        - $formkit: number
+          name: links_limit
+          label: 侧栏友链-显示数量
+          help: 「友链」侧栏模块最多显示多少个友链，0 或留空表示显示全部
+          value: 5
+          min: 0
         - $formkit: text
           name: weather_city
           label: 时间天气-城市

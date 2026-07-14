@@ -120,7 +120,8 @@
       <h4 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('link')}"></th:block></span>友链</h4>
       <a class="moe-cat-more" th:href="@{/links}">更多 »</a>
     </div>
-    <div class="moe-friend-list">
+    <div class="moe-friend-list"
+         th:style="'--moe-links-limit:' + (${theme.config.sidebar?.links_limit} ?: 0)">
       <th:block th:each="group : ${linkGroups}">
         <a th:each="link : ${group.links}" class="moe-friend-item"
            th:href="${link.spec.url}" target="_blank" rel="noopener"

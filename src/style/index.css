@@ -1226,12 +1226,12 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 .moe-wish-more-btn:hover{color:var(--moe-theme);border-color:var(--moe-theme)}
 /* 置底发布栏 */
 .moe-wish-form{position:sticky;bottom:16px;z-index:1000;margin:18px auto 8px;max-width:800px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--moe-card);border:1px solid var(--moe-border);border-radius:16px;padding:10px 12px;box-shadow:0 12px 34px rgba(0,0,0,.14)}
-.moe-wish-nick{width:104px;flex:none}
-.moe-wish-mail{width:150px;flex:none}
+.moe-wish-nick{width:95px;flex:none}
+.moe-wish-mail{width:130px;flex:none}
 .moe-wish-nick,.moe-wish-mail,.moe-wish-ta{border:1px solid var(--moe-border);background:var(--moe-bg-2);color:var(--moe-text);border-radius:10px;padding:9px 12px;font-size:13.5px;font-family:inherit;transition:border-color .2s}
 .moe-wish-nick:focus,.moe-wish-mail:focus,.moe-wish-ta:focus{outline:none;border-color:var(--moe-theme)}
 .moe-wish-mid{display:flex;align-items:center;gap:8px;flex:1;min-width:240px}
-.moe-wish-ta{flex:1;min-width:80px;resize:none;line-height:1.5;max-height:120px;overflow-y:auto}
+.moe-wish-ta{flex:1;min-width:110px;resize:none;line-height:1.5;max-height:120px;overflow-y:auto}
 .moe-wish-count{font-size:11px;color:var(--moe-muted);flex:none}
 .moe-wish-colors{display:inline-flex;gap:5px;flex:none}
 .moe-wish-color{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;transition:transform .15s,border-color .15s}
@@ -1489,3 +1489,125 @@ html.dark .moe-moment-body .katex-display { color: var(--moe-text) !important; }
 .moe-archive-tl .moe-tl-item.moe-arc-c2{--c:#43c59e}
 .moe-archive-tl .moe-tl-item.moe-arc-c3{--c:#6fa5ff}
 .moe-archive-tl .moe-tl-item.moe-arc-c4{--c:#a87fff}
+
+/* ===== 移动端右侧抽屉 ===== */
+@media (max-width:1024px){
+  .moe-navbar .moe-nav{display:none!important}
+  .moe-navbar .moe-search{display:none!important}
+  .moe-navbar .moe-user-entry{display:none!important}
+  .moe-navbar-inner > #moe-theme-toggle{margin-left:auto!important}
+  .moe-sidebar .moe-profile{display:none!important}
+}
+html.moe-drawer-open{overflow:hidden}
+.moe-drawer-mask{position:fixed;inset:0;width:100vw;height:100vh;z-index:1100;background:rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s ease}
+html.moe-drawer-open .moe-drawer-mask{opacity:1;visibility:visible}
+.moe-drawer{visibility:hidden;position:fixed;top:0;bottom:0;right:0;z-index:1120;width:80%;max-width:400px;background:var(--moe-bg);border-left:1px solid var(--moe-border);transform:translate3d(100%,0,0);transition:transform .35s ease,visibility .35s ease}
+html.moe-drawer-open .moe-drawer{visibility:visible;transform:translate3d(0,0,0)}
+.moe-drawer-wrap{height:100%;padding:16px 14px 24px;overflow-y:auto;overscroll-behavior:contain}
+.moe-drawer-card{background:var(--moe-card);border:1px solid var(--moe-border);border-radius:16px;padding:14px;margin-bottom:14px}
+/* 个人信息 */
+.moe-drawer-profile{text-align:center;padding:20px 14px 16px}
+.moe-drawer-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--moe-theme);padding:2px}
+.moe-drawer-name{margin:10px 0 4px;font-size:17px;font-weight:700}
+.moe-drawer-bio{margin:0;font-size:13px;color:var(--moe-muted)}
+.moe-drawer-loc{display:flex;align-items:center;justify-content:center;gap:4px;margin:6px 0 0;font-size:12px;color:var(--moe-muted)}
+.moe-drawer-stats{display:flex;margin-top:14px;padding-top:14px;border-top:1px dashed var(--moe-border)}
+.moe-drawer-stats .moe-dstat{flex:1;display:flex;flex-direction:column;gap:2px;color:var(--moe-muted);font-size:12px}
+.moe-drawer-stats .moe-dstat b{font-size:18px;color:var(--moe-theme);font-weight:800}
+.moe-drawer-stats .moe-dstat:hover{text-decoration:none}
+.moe-drawer-social{display:flex;justify-content:center;gap:10px;margin-top:12px}
+/* 搜索 */
+.moe-drawer-search{position:relative;display:flex;align-items:center;margin-bottom:14px}
+.moe-drawer-search svg{position:absolute;left:14px;color:var(--moe-muted);pointer-events:none}
+.moe-drawer-search input{width:100%;height:44px;padding:0 16px 0 40px;background:var(--moe-card);border:1px solid var(--moe-border);border-radius:999px;color:var(--moe-text);font-size:14px;outline:none}
+.moe-drawer-search input:focus{border-color:var(--moe-theme)}
+/* 导航 */
+.moe-drawer-nav{padding:4px 0}
+.moe-dnav-link:hover{color:var(--moe-theme);text-decoration:none}
+.moe-dnav-item + .moe-dnav-item > .moe-dnav-link{border-top:1px solid var(--moe-border)}
+.moe-dnav-text{flex:1}
+.moe-dnav-caret{display:flex;align-items:center;color:var(--moe-muted);padding:4px;margin:-4px;transition:transform .25s ease}
+.moe-dnav-sub{max-height:0;overflow:hidden;transition:max-height .3s ease;background:var(--moe-bg-2)}
+.moe-dnav-item.open .moe-dnav-sub{max-height:400px}
+.moe-dnav-sublink{display:block;padding:12px 16px 12px 32px;font-size:14px;color:var(--moe-muted);border-top:1px solid var(--moe-border)}
+.moe-dnav-sublink:hover{color:var(--moe-theme);text-decoration:none}
+/* 登录 */
+.moe-drawer-user{padding:0;overflow:hidden}
+.moe-drawer-user .moe-user-entry{display:block!important;width:100%;position:static}
+.moe-drawer-user .moe-user-trigger{display:none!important}
+.moe-drawer-user .moe-user-menu{width:100%;position:static}
+.moe-drawer-user .moe-user-dropdown{display:block!important;position:static;width:auto;background:transparent;border:none;box-shadow:none;padding:0;margin:0;transform:none;opacity:1;visibility:visible}
+.moe-drawer-user .moe-user-card{display:flex;align-items:center;gap:11px;padding:14px;margin:0;cursor:pointer;border:none}
+.moe-drawer-user .moe-user-card::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--moe-muted);border-bottom:2px solid var(--moe-muted);transform:rotate(45deg);transition:transform .25s ease}
+.moe-drawer-user.open .moe-user-card::after{transform:rotate(-135deg)}
+.moe-drawer-user .moe-user-card-avatar{width:42px!important;height:42px!important}
+.moe-drawer-user .moe-user-dropdown-item,.moe-drawer-user .moe-user-logout-form{max-height:0;overflow:hidden;opacity:0;transition:max-height .28s ease,opacity .2s ease}
+.moe-drawer-user.open .moe-user-dropdown-item,.moe-drawer-user.open .moe-user-logout-form{max-height:60px;opacity:1}
+.moe-drawer-user .moe-user-dropdown-item{display:flex;align-items:center;gap:9px;padding:0 14px;font-size:14px;border-top:1px solid var(--moe-border);border-radius:0}
+.moe-drawer-user.open .moe-user-dropdown-item{padding:13px 14px}
+.moe-drawer-user .moe-user-login{display:flex;width:100%;justify-content:flex-start;gap:9px;padding:15px 14px;border-radius:0;background:transparent;color:var(--moe-text);font-size:15px;height:auto}
+.moe-drawer-user .moe-user-login-text{display:inline}
+@media (min-width:1025px){ .moe-drawer,.moe-drawer-mask{display:none!important} }
+
+/* 抽屉导航行:链接 + 独立箭头按钮 */
+.moe-dnav-row{display:flex;align-items:center}
+.moe-dnav-item + .moe-dnav-item > .moe-dnav-row{border-top:1px solid var(--moe-border)}
+.moe-dnav-link{flex:1;display:flex;align-items:center;gap:10px;padding:13px 16px;color:var(--moe-text);font-size:15px}
+.moe-dnav-ico{display:inline-flex;align-items:center;color:var(--moe-theme);flex:none}
+.moe-dnav-ico svg{width:17px;height:17px}
+.moe-dnav-caret{display:flex;align-items:center;justify-content:center;width:42px;height:44px;border:none;background:transparent;color:var(--moe-muted);cursor:pointer;transition:transform .25s ease;padding:0}
+.moe-dnav-item.open .moe-dnav-caret{transform:rotate(180deg)}
+/* 抽屉搜索面板 */
+.moe-drawer-search-panel{position:absolute;top:50px;left:0;right:0;z-index:5;background:var(--moe-card);border:1px solid var(--moe-border);border-radius:12px;box-shadow:var(--moe-shadow);max-height:240px;overflow-y:auto;padding:6px}
+.moe-drawer-search-panel .moe-search-item{display:block;padding:9px 12px;border-radius:8px;font-size:14px;color:var(--moe-text)}
+.moe-drawer-search-panel .moe-search-item:hover{background:var(--moe-bg-2);color:var(--moe-theme);text-decoration:none}
+.moe-drawer-search-panel .moe-search-empty{padding:12px;text-align:center;color:var(--moe-muted);font-size:13px}
+/* 确保抽屉里的登录模块可见 */
+.moe-drawer .moe-user-entry{display:block!important}
+
+/* 抽屉登录模块(独立渲染) */
+.moe-drawer-user{padding:0;overflow:hidden}
+.moe-duser-login,.moe-duser-card{display:flex;align-items:center;gap:11px;width:100%;padding:15px 14px;background:transparent;border:none;color:var(--moe-text);font-size:15px;cursor:pointer;text-align:left}
+.moe-duser-login:hover,.moe-duser-card:hover{background:var(--moe-bg-2);text-decoration:none}
+.moe-duser-ico{display:inline-flex;align-items:center;color:var(--moe-theme)}
+.moe-duser-ico svg{width:17px;height:17px}
+.moe-duser-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;flex:none}
+.moe-duser-avatar-fb{display:flex;align-items:center;justify-content:center;background:var(--moe-bg-2);color:var(--moe-muted)}
+.moe-duser-meta{display:flex;flex-direction:column;flex:1;min-width:0}
+.moe-duser-name{font-weight:700;font-size:15px}
+.moe-duser-slug{font-size:12px;color:var(--moe-muted)}
+.moe-duser-caret{display:flex;color:var(--moe-muted);transition:transform .25s ease}
+.moe-drawer-user.open .moe-duser-caret{transform:rotate(180deg)}
+.moe-duser-panel{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.moe-drawer-user.open .moe-duser-panel{max-height:200px}
+.moe-duser-item{display:flex;align-items:center;gap:10px;width:100%;padding:13px 14px;font-size:14px;color:var(--moe-text);background:transparent;border:none;border-top:1px solid var(--moe-border);cursor:pointer;text-align:left}
+.moe-duser-item:hover{background:var(--moe-bg-2);color:var(--moe-theme);text-decoration:none}
+.moe-duser-item.is-danger{color:#ff5d6c}
+.moe-duser-logout{margin:0}
+
+/* 抽屉子项图标 */
+.moe-dnav-sublink{display:flex;align-items:center;gap:10px;padding:12px 16px 12px 32px;font-size:14px;color:var(--moe-muted);border-top:1px solid var(--moe-border)}
+.moe-dnav-subico{display:inline-flex;align-items:center;color:var(--moe-theme);flex:none;opacity:.8}
+.moe-dnav-subico svg{width:15px;height:15px}
+
+/* ===== 移动端侧栏(可在设置里单独配置模块与顺序) ===== */
+.moe-sidebar-mobile{display:none}
+@media (max-width:1024px){
+  /* 若配置了移动端模块，则用它替代左右栏 */
+  .moe-layout.has-mobile-sidebar .moe-sidebar-left,
+  .moe-layout.has-mobile-sidebar .moe-sidebar-right{display:none!important}
+  .moe-sidebar-mobile{display:flex;order:2;position:static}
+}
+@media (min-width:1025px){ .moe-sidebar-mobile{display:none!important} }
+
+/* 侧栏友链数量限制(由设置项注入 --moe-links-limit;0=全部) */
+.moe-friend-list[style*="--moe-links-limit:1"] .moe-friend-item:nth-child(n+2),
+.moe-friend-list[style*="--moe-links-limit:2"] .moe-friend-item:nth-child(n+3),
+.moe-friend-list[style*="--moe-links-limit:3"] .moe-friend-item:nth-child(n+4),
+.moe-friend-list[style*="--moe-links-limit:4"] .moe-friend-item:nth-child(n+5),
+.moe-friend-list[style*="--moe-links-limit:5"] .moe-friend-item:nth-child(n+6),
+.moe-friend-list[style*="--moe-links-limit:6"] .moe-friend-item:nth-child(n+7),
+.moe-friend-list[style*="--moe-links-limit:7"] .moe-friend-item:nth-child(n+8),
+.moe-friend-list[style*="--moe-links-limit:8"] .moe-friend-item:nth-child(n+9),
+.moe-friend-list[style*="--moe-links-limit:9"] .moe-friend-item:nth-child(n+10),
+.moe-friend-list[style*="--moe-links-limit:10"] .moe-friend-item:nth-child(n+11){display:none}

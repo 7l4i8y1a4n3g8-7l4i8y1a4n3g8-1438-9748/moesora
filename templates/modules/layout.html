@@ -16,6 +16,9 @@
   <!-- 顶部导航 -->
   <div th:replace="~{modules/navbar :: navbar}"></div>
 
+  <!-- 移动端右侧抽屉(独立于 navbar) -->
+  <div th:replace="~{modules/drawer :: drawer}"></div>
+
   <!-- Pjax 进度条（无刷新切页时显示） -->
   <div id="moe-pjax-bar" class="moe-pjax-bar"></div>
 
@@ -26,7 +29,7 @@
 
   <!-- 三列主体：左侧栏 / 正文 / 右侧栏（模块化布局：按后台配置的列表渲染，未配置则回退默认顺序） -->
   <div class="moe-layout"
-       th:classappend="${(theme.config.basic?.sidebar_swap ? ' is-swapped' : '') + ' layout-' + (theme.config.basic?.sidebar_column ?: 'three')}">
+       th:classappend="${(theme.config.basic?.sidebar_swap ? ' is-swapped' : '') + ' layout-' + (theme.config.basic?.sidebar_column ?: 'three') + ((theme.config.sidebar?.mobile_modules != null and !#lists.isEmpty(theme.config.sidebar.mobile_modules)) ? ' has-mobile-sidebar' : '')}">
     <aside class="moe-sidebar moe-sidebar-left"
            th:if="${(theme.config.basic?.sidebar_column ?: 'three') != 'right'}"
            th:with="lm=${theme.config.sidebar?.left_modules}">
@@ -40,6 +43,12 @@
     <main class="moe-main">
       <div th:replace="${content}"></div>
     </main>
+    <aside class="moe-sidebar moe-sidebar-mobile"
+           th:if="${theme.config.sidebar?.mobile_modules != null and !#lists.isEmpty(theme.config.sidebar.mobile_modules)}">
+      <th:block th:each="m : ${theme.config.sidebar.mobile_modules}">
+        <th:block th:replace="~{modules/widgets :: widget(${m.module})}"></th:block>
+      </th:block>
+    </aside>
     <aside class="moe-sidebar moe-sidebar-right"
            th:if="${(theme.config.basic?.sidebar_column ?: 'three') != 'left'}"
            th:with="rm=${theme.config.sidebar?.right_modules}">

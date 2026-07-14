@@ -139,14 +139,21 @@
     var t=document.getElementById("moe-nav-toggle");
     var bar=document.querySelector(".moe-navbar");
     if(!t||!bar) return;
-    function close(){ bar.classList.remove("nav-open"); t.setAttribute("aria-expanded","false"); }
+    function close(){ bar.classList.remove("nav-open"); t.setAttribute("aria-expanded","false"); document.documentElement.classList.remove("moe-drawer-open"); var du=document.getElementById("moe-drawer-user"); if(du) du.classList.remove("open"); }
     t.addEventListener("click",function(e){
       e.stopPropagation();
       var open=bar.classList.toggle("nav-open");
       t.setAttribute("aria-expanded", open?"true":"false");
+      document.documentElement.classList.toggle("moe-drawer-open", open && window.matchMedia("(max-width:1024px)").matches);
     });
     bar.querySelectorAll(".moe-nav-link,.moe-nav-sublink").forEach(function(a){ a.addEventListener("click",close); });
-    document.addEventListener("click",function(e){ if(bar.classList.contains("nav-open") && !bar.contains(e.target)) close(); });
+    document.addEventListener("click",function(e){
+      if(!bar.classList.contains("nav-open")) return;
+      if(bar.contains(e.target)) return;
+      var dr=document.getElementById("moe-drawer");
+      if(dr && dr.contains(e.target)) return;
+      close();
+    });
   })();
   </script>
   <script>
