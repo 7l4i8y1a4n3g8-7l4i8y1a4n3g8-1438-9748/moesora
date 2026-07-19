@@ -357,7 +357,6 @@ spec:
           label: 移动端侧栏模块（拖动排序，删除某项即隐藏）
           help: 单独控制手机端侧栏显示哪些模块及顺序；留空则沿用左栏+右栏的默认顺序
           value:
-            - { module: "profile" }
             - { module: "notice" }
             - { module: "recent" }
             - { module: "categories" }
@@ -366,8 +365,6 @@ spec:
               name: module
               label: 模块
               options:
-                - { label: "文章目录(仅文章页显示)", value: "toc" }
-                - { label: "个人信息卡", value: "profile" }
                 - { label: "公告", value: "notice" }
                 - { label: "恋爱墙", value: "love" }
                 - { label: "音乐播放器", value: "music" }

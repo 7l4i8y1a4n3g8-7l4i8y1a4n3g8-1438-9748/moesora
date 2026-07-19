@@ -596,7 +596,7 @@ window.MoesoraInitPage = ->
     if tocCard
       tocCard.hidden = true
     if content and toc and tocCard
-      headings = content.querySelectorAll('h2, h3, h4')
+      headings = content.querySelectorAll('h1, h2, h3, h4')
       links = []
       if headings.length
         headings.forEach (h, i) ->
@@ -784,6 +784,17 @@ window.MoesoraInitPage = ->
         # 超过阈值默认收起
         if foldLine > 0 and lineN > foldLine
           setCollapsed true, false
+        return
+      # 正文表格横向滚动：表格本身 overflow:hidden 只为裁出圆角，无法产生滚动条，
+      # 需要外包一层容器来承载横向滚动（窄屏/移动端表格过宽时尤为明显）
+      content.querySelectorAll('table').forEach (table) ->
+        return if table.dataset.moeTable
+        table.dataset.moeTable = '1'
+        return unless table.parentNode
+        wrap = document.createElement('div')
+        wrap.className = 'moe-table-wrap'
+        table.parentNode.insertBefore wrap, table
+        wrap.appendChild table
         return
       # 正文长图折叠（高度超过设定值）
       if foldImgH > 0

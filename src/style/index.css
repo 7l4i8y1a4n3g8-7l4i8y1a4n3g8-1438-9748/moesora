@@ -184,8 +184,9 @@ html.dark .moe-icon-moon{display:block}
 .moe-post-content pre{position:relative;background:#282c34;color:#e6e6e6;padding:16px;
   border-radius:12px;overflow:auto;margin:1.2em 0}
 .moe-post-content pre code{background:none;padding:0;color:inherit;font-size:14px;line-height:1.6}
-.moe-post-content table{width:100%;border-collapse:separate;border-spacing:0;margin:1em 0;border:1px solid var(--moe-border);border-radius:12px;overflow:hidden}
-.moe-post-content th,.moe-post-content td{border:0;border-bottom:1px solid var(--moe-border);border-right:1px solid var(--moe-border);padding:8px 12px}
+.moe-post-content .moe-table-wrap{margin:1em 0;border:1px solid var(--moe-border);border-radius:12px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.moe-post-content table{width:auto;min-width:100%;border-collapse:separate;border-spacing:0}
+.moe-post-content th,.moe-post-content td{border:0;border-bottom:1px solid var(--moe-border);border-right:1px solid var(--moe-border);padding:8px 12px;white-space:nowrap}
 .moe-post-content th:last-child,.moe-post-content td:last-child{border-right:0}
 .moe-post-content tr:last-child td{border-bottom:0}
 .moe-post-content th{background:var(--moe-bg-2)}
@@ -221,13 +222,23 @@ html.dark .moe-icon-moon{display:block}
 .moe-archive-item a{color:var(--moe-text)}
 .moe-archive-item a:hover{color:var(--moe-theme);text-decoration:none}
 
-/* TOC 目录 */
-.moe-toc-nav a{display:block;padding:4px 8px;font-size:13px;color:var(--moe-muted);
-  border-left:2px solid transparent;border-radius:0 6px 6px 0;line-height:1.5}
-.moe-toc-nav a:hover{color:var(--moe-theme);text-decoration:none;background:var(--moe-bg-2)}
-.moe-toc-nav a.active{color:var(--moe-theme);border-left-color:var(--moe-theme);background:var(--moe-bg-2)}
-.moe-toc-nav .toc-h3{padding-left:18px}
-.moe-toc-nav .toc-h4{padding-left:28px}
+/* TOC 目录：分级缩进 + 嵌套竖线引导（粗细随层级递减） + 当前项整行高亮 */
+.moe-toc-nav{position:relative}
+.moe-toc-nav a{display:block;position:relative;margin:1px 0;padding:6px 10px 6px 16px;
+  font-size:13px;color:var(--moe-muted);border-radius:8px;line-height:1.5}
+.moe-toc-nav a::before{content:'';position:absolute;top:0;bottom:0;left:0;
+  background:var(--moe-border);border-radius:2px}
+.moe-toc-nav a:hover{color:var(--moe-theme);text-decoration:none;background:var(--moe-bg-2);opacity:1}
+.moe-toc-nav a.active{color:var(--moe-theme);background:var(--moe-bg-2);font-weight:600;opacity:1}
+.moe-toc-nav a.active::before{background:var(--moe-theme)}
+.moe-toc-nav .toc-h1{padding-left:14px;color:var(--moe-text);font-weight:600}
+.moe-toc-nav .toc-h1::before{left:0;width:3px}
+.moe-toc-nav .toc-h2{padding-left:28px;opacity:.85}
+.moe-toc-nav .toc-h2::before{left:14px;width:2.4px}
+.moe-toc-nav .toc-h3{padding-left:42px;opacity:.68}
+.moe-toc-nav .toc-h3::before{left:28px;width:1.8px}
+.moe-toc-nav .toc-h4{padding-left:56px;opacity:.52}
+.moe-toc-nav .toc-h4::before{left:42px;width:1.4px}
 
 /* 错误页 */
 .moe-error{text-align:center;padding:48px 20px}
@@ -1017,7 +1028,7 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 .moe-vp-err{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#fff;background:rgba(0,0,0,.62);font-size:13px;line-height:1.7;backdrop-filter:blur(1px)}
 .moe-vp-err[hidden]{display:none}
 /* 中央大播放键 */
-.moe-vp-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;width:64px;height:64px;padding:18px 16px 18px 20px;border:none;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;cursor:pointer;transition:transform .2s ease,background .2s ease;display:flex;align-items:center;justify-content:center}
+.moe-vp-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;width:64px;height:64px;padding:18px 20px 18px 16px;border:none;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;cursor:pointer;transition:transform .2s ease,background .2s ease;display:flex;align-items:center;justify-content:center}
 .moe-vp-big:hover{background:var(--moe-theme);transform:translate(-50%,-50%) scale(1.08)}
 .moe-vp.playing .moe-vp-big{display:none}
 /* 控制条 */
@@ -1067,7 +1078,7 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 
 /* ===== 音频播放器 ===== */
 .moe-ap{display:flex;align-items:center;gap:12px;margin:1.1em 0;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--moe-theme) 8%,transparent);border:1px solid color-mix(in srgb,var(--moe-theme) 22%,transparent);box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.moe-ap-play{flex:none;width:44px;height:44px;padding:12px 11px 12px 13px;border:none;border-radius:50%;background:var(--moe-theme);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s ease,box-shadow .15s ease;box-shadow:0 3px 10px color-mix(in srgb,var(--moe-theme) 45%,transparent)}
+.moe-ap-play{flex:none;width:44px;height:44px;padding:12px 13px 12px 11px;border:none;border-radius:50%;background:var(--moe-theme);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s ease,box-shadow .15s ease;box-shadow:0 3px 10px color-mix(in srgb,var(--moe-theme) 45%,transparent)}
 .moe-ap-play:hover{transform:scale(1.06)}
 .moe-ap.playing .moe-ap-play{padding:12px}
 .moe-ap-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
@@ -1111,6 +1122,9 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 .moe-post-content ul>li:has(input[type="checkbox"])>div,
 .moe-post-content ul[data-type="taskList"]>li>div{flex:1;min-width:0}
 .moe-post-content ul[data-type="taskList"]>li>div>p{margin:0}
+/* ByteMD 等编辑器导出的任务列表是 <li><input>文字</li> 扁平结构（无 label/div 包裹），
+   checkbox 与文字在 flex-start 布局下会因行高留白错位，单独把直接子级的 checkbox 居中对齐 */
+.moe-post-content ul>li:has(input[type="checkbox"])>input[type="checkbox"]{align-self:center}
 /* 彩色提示框 */
 .moe-note{margin:1.1em 0;border-radius:10px;padding:12px 16px;border:1px solid;color:inherit}
 .moe-note-head{display:flex;align-items:center;gap:6px;font-weight:700;font-size:13.5px;margin-bottom:6px}
@@ -1381,11 +1395,9 @@ html.dark .moe-moment-body .katex-display { color: var(--moe-text) !important; }
 
 /* ===== 标签星云 ===== */
 .moe-tag-nebula{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:11px;padding:12px 4px}
-.moe-tag-star{--tc:var(--moe-theme);display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-weight:600;line-height:1.4;color:var(--tc);background:color-mix(in srgb,var(--tc) 12%,var(--moe-card));border:1.5px solid color-mix(in srgb,var(--tc) 32%,transparent);animation:moe-star-pop .45s cubic-bezier(.34,1.56,.5,1) backwards;transition:transform .25s cubic-bezier(.34,1.6,.5,1),box-shadow .25s ease,background .25s ease,color .25s ease,border-color .25s ease}
-.moe-tag-star:hover{animation:none;color:#fff;background:var(--tc);border-color:var(--tc);transform:translateY(-4px) rotate(-2deg) scale(1.08);box-shadow:0 12px 26px color-mix(in srgb,var(--tc) 45%,transparent);text-decoration:none}
-.moe-tag-hash{opacity:.55;font-weight:700}
-.moe-tag-num{font-size:11px;font-weight:700;padding:0 7px;line-height:1.7;border-radius:999px;background:color-mix(in srgb,var(--tc) 20%,transparent)}
-.moe-star-s0{font-size:12px;opacity:.82}
+.moe-tag-star{--tc:var(--moe-theme);display:inline-flex;align-items:center;gap:6px;font-weight:600;line-height:1.4;color:var(--tc);animation:moe-star-pop .45s cubic-bezier(.34,1.56,.5,1) backwards;transition:transform .25s cubic-bezier(.34,1.6,.5,1),box-shadow .25s ease,background .25s ease,color .25s ease,border-color .25s ease}
+.moe-tag-star:hover{animation:none;text-decoration:none}
+.moe-tag-num{font-size:11px;padding:0 7px;line-height:1.7;border-radius:999px;background:color-mix(in srgb,var(--tc) 20%,transparent)}
 .moe-star-c0{--tc:#ff6fa5}
 .moe-star-c1{--tc:#ff9f6b}
 .moe-star-c2{--tc:#43c59e}
@@ -1441,7 +1453,6 @@ html.dark .moe-moment-body .katex-display { color: var(--moe-text) !important; }
 /* ===== 标签星空(彩色文字/无边框/散布浮动)===== */
 .moe-tag-star{background:none!important;border:none!important;padding:3px 8px;box-shadow:none;text-shadow:0 1px 3px color-mix(in srgb,var(--tc) 18%,transparent);border-radius:8px}
 .moe-tag-star:hover{background:none!important;border:none!important;color:var(--tc);transform:scale(1.3) rotate(-2deg);text-shadow:0 0 16px color-mix(in srgb,var(--tc) 75%,transparent);box-shadow:none;z-index:6}
-.moe-tag-hash{opacity:.45}
 .moe-tag-num{background:none;opacity:.55;font-size:.68em;padding:0 2px;font-weight:700}
 .moe-tag-star:hover .moe-tag-num{background:none;color:var(--tc);opacity:.9}
 .moe-tag-nebula.is-scattered{position:relative;display:block;padding:0}
@@ -1460,7 +1471,6 @@ html.dark .moe-moment-body .katex-display { color: var(--moe-text) !important; }
 .moe-tag-star:hover{z-index:8}
 .moe-tag-star:hover .moe-tag-inner{transform:scale(1.32) rotate(-2deg);animation-play-state:paused}
 .moe-tag-inner{transition:transform .25s cubic-bezier(.34,1.6,.5,1)}
-@keyframes moe-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
 /* ===== 修复:归档糖果色(需覆盖靠后的旧 .moe-tl-dot 规则) ===== */
 .moe-archive-tl .moe-tl-item .moe-tl-dot{background:var(--c);border:3px solid var(--moe-card);box-shadow:0 0 0 1px var(--c),0 0 10px color-mix(in srgb,var(--c) 65%,transparent);animation:moe-dot-pulse 2s ease-in-out infinite}

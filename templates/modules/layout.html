@@ -45,7 +45,8 @@
     </main>
     <aside class="moe-sidebar moe-sidebar-mobile"
            th:if="${theme.config.sidebar?.mobile_modules != null and !#lists.isEmpty(theme.config.sidebar.mobile_modules)}">
-      <th:block th:each="m : ${theme.config.sidebar.mobile_modules}">
+      <th:block th:each="m : ${theme.config.sidebar.mobile_modules}"
+                th:if="${m.module != 'toc' and m.module != 'profile'}">
         <th:block th:replace="~{modules/widgets :: widget(${m.module})}"></th:block>
       </th:block>
     </aside>
