@@ -326,6 +326,7 @@ spec:
                 - { label: "分类", value: "categories" }
                 - { label: "标签云", value: "tags" }
                 - { label: "时间天气", value: "weather" }
+                - { label: "每日一言", value: "quote" }
         - $formkit: repeater
           name: right_modules
           label: 右栏模块（拖动排序，删除某项即隐藏）
@@ -352,6 +353,7 @@ spec:
                 - { label: "分类", value: "categories" }
                 - { label: "标签云", value: "tags" }
                 - { label: "时间天气", value: "weather" }
+                - { label: "每日一言", value: "quote" }
         - $formkit: repeater
           name: mobile_modules
           label: 移动端侧栏模块（拖动排序，删除某项即隐藏）
@@ -374,6 +376,7 @@ spec:
                 - { label: "分类", value: "categories" }
                 - { label: "标签云", value: "tags" }
                 - { label: "时间天气", value: "weather" }
+                - { label: "每日一言", value: "quote" }
         - $formkit: textarea
           name: notice_content
           label: 公告-内容
@@ -405,6 +408,34 @@ spec:
               value: "false"
             - label: 开启
               value: "true"
+        - $formkit: select
+          name: quote_mode
+          label: 每日一言-来源
+          help: 需先在上方左/右/移动端栏模块里添加「每日一言」。「仅自定义」完全离线，不发起任何外部请求；「仅API」调用兼容API接口；「API优先」会先尝试调用接口，请求失败(网络问题/接口不可用)时自动回退到自定义语句。
+          value: "api_fallback"
+          options:
+            - { label: "API优先，失败时用自定义语句", value: "api_fallback" }
+            - { label: "仅使用一言 API", value: "api" }
+            - { label: "仅使用自定义语句(离线)", value: "custom" }
+        - $formkit: text
+          name: quote_api_url
+          label: 每日一言-API 地址
+          help: 默认使用一言官方接口；也可以填写自建的兼容接口地址(需返回 JSON 且包含 hitokoto/from 或 text/author 字段，跨域需允许浏览器直接请求)。
+          value: "https://v1.hitokoto.cn/"
+        - $formkit: repeater
+          name: quote_custom_list
+          label: 每日一言-自定义语句
+          help: 「来源」选择「仅自定义」或「API优先」时，会从这里随机抽取一条展示(API优先模式仅在接口请求失败时使用)
+          value:
+            - { text: "生活明朗，万物可爱。", author: "" }
+            - { text: "愿你眼里有星辰，心中有暖阳。", author: "" }
+          children:
+            - $formkit: text
+              name: text
+              label: 句子内容
+            - $formkit: text
+              name: author
+              label: 作者/出处(可选)
         - $formkit: number
           name: recent_posts_count
           label: 最近文章-显示数量

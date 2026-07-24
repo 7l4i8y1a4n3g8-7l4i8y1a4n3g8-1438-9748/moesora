@@ -335,6 +335,72 @@
     </script>
   </section>
 
+  <!-- 每日一言：支持自定义语句 / 一言 API / API优先失败回退三种模式 -->
+  <section th:case="'quote'" class="moe-card moe-quote"
+           th:with="qMode=${theme.config.sidebar?.quote_mode ?: 'api_fallback'},
+                    qApi=${theme.config.sidebar?.quote_api_url ?: 'https://v1.hitokoto.cn/'}"
+           th:attr="data-mode=${qMode},data-api=${qApi}">
+    <h4 class="moe-card-title"><span class="moe-title-ico"><th:block th:replace="~{modules/icons :: icon('quote')}"></th:block></span>每日一言</h4>
+    <p class="moe-quote-text" data-role="text">句子加载中…</p>
+    <p class="moe-quote-author" data-role="author"></p>
+    <button type="button" class="moe-quote-refresh" data-role="refresh" title="换一句" aria-label="换一句">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.6"/><path d="M4 4v4.6h4.6"/><path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.4"/><path d="M20 20v-4.6h-4.6"/></svg>
+    </button>
+    <script th:inline="javascript">
+    (function(){
+      var me = document.currentScript;
+      var root = (me && me.closest && me.closest(".moe-quote"));
+      if(!root) return;
+      var custom = /*[[${theme.config.sidebar?.quote_custom_list ?: {}}]]*/ [];
+      var mode = root.getAttribute("data-mode") || "api_fallback";
+      var api = root.getAttribute("data-api") || "https://v1.hitokoto.cn/";
+      var elText = root.querySelector('[data-role="text"]');
+      var elAuthor = root.querySelector('[data-role="author"]');
+      var elRefresh = root.querySelector('[data-role="refresh"]');
+
+      function renderCustom(){
+        if(!custom || !custom.length){
+          if(elText) elText.textContent = "还没有配置任何自定义语句";
+          if(elAuthor) elAuthor.textContent = "";
+          return;
+        }
+        var item = custom[Math.floor(Math.random()*custom.length)];
+        if(elText) elText.textContent = (item && item.text) || "";
+        if(elAuthor) elAuthor.textContent = (item && item.author) ? ("—— " + item.author) : "";
+      }
+
+      function renderApiResult(j){
+        var text = (j && (j.hitokoto || j.text)) || "";
+        var from = (j && (j.from || j.author)) || "";
+        if(!text){ throw new Error("empty"); }
+        if(elText) elText.textContent = text;
+        if(elAuthor) elAuthor.textContent = from ? ("—— " + from) : "";
+      }
+
+      function loadFromApi(){
+        if(elText) elText.textContent = "句子加载中…";
+        if(elAuthor) elAuthor.textContent = "";
+        fetch(api, { cache: "no-store" })
+          .then(function(r){ if(!r.ok) throw new Error("http " + r.status); return r.json(); })
+          .then(renderApiResult)
+          .catch(function(){
+            if(mode === "api_fallback"){ renderCustom(); }
+            else {
+              if(elText) elText.textContent = "一言获取失败，请稍后重试";
+              if(elAuthor) elAuthor.textContent = "";
+            }
+          });
+      }
+
+      function load(){
+        if(mode === "custom"){ renderCustom(); } else { loadFromApi(); }
+      }
+      load();
+      if(elRefresh) elRefresh.addEventListener("click", load);
+    })();
+    </script>
+  </section>
+
   <!-- 未知 key：不渲染 -->
   <th:block th:case="*"></th:block>
 

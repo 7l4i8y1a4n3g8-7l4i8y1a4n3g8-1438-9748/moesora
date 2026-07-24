@@ -1204,6 +1204,17 @@ html.dark .moe-cmt-tool:hover{background:#3a2f3a}
 .moe-weather-gps:disabled{opacity:.6;cursor:default}
 .moe-weather-gps svg{flex:none}
 
+/* ===== 每日一言 ===== */
+.moe-quote{position:relative}
+.moe-quote-text{margin:4px 0 8px;padding:2px 4px 0 0;font-size:14.5px;line-height:1.7;
+  font-style:italic;color:var(--moe-text);min-height:1.7em}
+.moe-quote-author{margin:0 0 2px;font-size:12.5px;color:var(--moe-muted);text-align:right}
+.moe-quote-refresh{position:absolute;top:14px;right:14px;width:26px;height:26px;flex:none;border:none;
+  border-radius:50%;background:var(--moe-bg-2);color:var(--moe-muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s,transform .3s}
+.moe-quote-refresh:hover{background:var(--moe-theme);color:#fff}
+.moe-quote-refresh:active{transform:rotate(180deg)}
+
 /* ===== 留言墙 /wishes ===== */
 .moe-wish-header{text-align:center;padding:10px 0 4px}
 .moe-wish-title{font-size:34px;font-weight:800;color:var(--moe-theme);margin:0 0 10px;font-style:italic;letter-spacing:2px}
