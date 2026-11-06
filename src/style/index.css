@@ -184,10 +184,9 @@ html.dark .moe-icon-moon{display:block}
 .moe-post-content details{margin:1.2em 0;border:1px solid var(--moe-border);
   border-radius:12px;background:var(--moe-bg-2);overflow:clip}
 .moe-post-content details>summary{display:flex;align-items:center;gap:.5em;
-  padding:10px 14px;font-weight:600;color:var(--moe-text);
+  padding:10px 14px;font-weight:600;
   cursor:pointer;user-select:none;list-style:none;
   transition:color .18s ease,background .18s ease}
-.moe-post-content details>summary::-webkit-details-marker{display:none}
 .moe-post-content details>summary :is(h1,h2,h3,h4,h5,h6,p){margin:0;padding:0;border:0;
   font-size:inherit;display:inline}
 .moe-post-content details>summary::before{content:"";flex:none;width:0;height:0;
@@ -202,10 +201,10 @@ html.dark .moe-icon-moon{display:block}
   .moe-post-content details::details-content{transition:none}
   .moe-post-content details>summary::before{transition:none}
 }
-.moe-post-content details>*:not(summary){padding-left:14px;padding-right:14px}
-.moe-post-content details>*:not(summary):first-of-type{padding-top:4px}
-.moe-post-content details>*:not(summary):last-child{padding-bottom:12px}
-.moe-post-content details details{margin:.8em 0;background:transparent;border-color:var(--moe-border)}
+.moe-post-content details>summary~*{padding:0 14px}
+.moe-post-content details>summary+*{padding-top:4px}
+.moe-post-content details>summary~*:last-child{padding-bottom:12px}
+.moe-post-content details details{margin:.8em 0;background:transparent}
 /* 展开/收起高度过渡：避免内容瞬间撑开页面造成的跳动 */
 @supports (selector(::details-content)) and (interpolate-size: allow-keywords){
   .moe-post-content details{interpolate-size:allow-keywords}
