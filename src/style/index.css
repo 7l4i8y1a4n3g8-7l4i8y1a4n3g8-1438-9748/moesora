@@ -198,10 +198,22 @@ html.dark .moe-icon-moon{display:block}
   background:color-mix(in srgb,var(--moe-theme) 7%,transparent)}
 .moe-post-content details>summary:focus-visible{outline:2px solid var(--moe-theme);outline-offset:-2px}
 .moe-post-content details[open]>summary{border-bottom:1px solid var(--moe-border)}
+@media (prefers-reduced-motion:reduce){
+  .moe-post-content details::details-content{transition:none}
+  .moe-post-content details>summary::before{transition:none}
+}
 .moe-post-content details>*:not(summary){padding-left:14px;padding-right:14px}
 .moe-post-content details>*:not(summary):first-of-type{padding-top:4px}
 .moe-post-content details>*:not(summary):last-child{padding-bottom:12px}
 .moe-post-content details details{margin:.8em 0;background:transparent;border-color:var(--moe-border)}
+/* 展开/收起高度过渡：避免内容瞬间撑开页面造成的跳动 */
+@supports (selector(::details-content)) and (interpolate-size: allow-keywords){
+  .moe-post-content details{interpolate-size:allow-keywords}
+  .moe-post-content details::details-content{block-size:0;overflow:hidden;
+    transition:block-size .28s ease,content-visibility .28s;
+    transition-behavior:allow-discrete}
+  .moe-post-content details[open]::details-content{block-size:auto}
+}
 .moe-post-content code{background:var(--moe-bg-2);padding:2px 6px;border-radius:6px;font-size:.92em}
 .moe-post-content pre{position:relative;background:#282c34;color:#e6e6e6;padding:16px;
   border-radius:12px;overflow:auto;margin:1.2em 0}
