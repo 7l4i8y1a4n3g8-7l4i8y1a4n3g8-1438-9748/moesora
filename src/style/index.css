@@ -197,10 +197,6 @@ html.dark .moe-icon-moon{display:block}
   background:color-mix(in srgb,var(--moe-theme) 7%,transparent)}
 .moe-post-content details>summary:focus-visible{outline:2px solid var(--moe-theme);outline-offset:-2px}
 .moe-post-content details[open]>summary{border-bottom:1px solid var(--moe-border)}
-@media (prefers-reduced-motion:reduce){
-  .moe-post-content details::details-content{transition:none}
-  .moe-post-content details>summary::before{transition:none}
-}
 .moe-post-content details>summary~*{padding:0 14px}
 .moe-post-content details>summary+*{padding-top:4px}
 .moe-post-content details>summary~*:last-child{padding-bottom:12px}
@@ -212,6 +208,11 @@ html.dark .moe-icon-moon{display:block}
     transition:block-size .28s ease,content-visibility .28s;
     transition-behavior:allow-discrete}
   .moe-post-content details[open]::details-content{block-size:auto}
+}
+/* 减弱动效：须置于上面的过渡声明之后，同特异性下后者才生效 */
+@media (prefers-reduced-motion:reduce){
+  .moe-post-content details::details-content{transition:none}
+  .moe-post-content details>summary::before{transition:none}
 }
 .moe-post-content code{background:var(--moe-bg-2);padding:2px 6px;border-radius:6px;font-size:.92em}
 .moe-post-content pre{position:relative;background:#282c34;color:#e6e6e6;padding:16px;
