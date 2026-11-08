@@ -182,7 +182,7 @@ html.dark .moe-icon-moon{display:block}
   background:var(--moe-bg-2);border-radius:0 8px 8px 0;color:var(--moe-muted)}
 /* ===== Halo 折叠块（details/summary）===== */
 .moe-post-content details{margin:1.2em 0;border:1px solid var(--moe-border);
-  border-radius:12px;background:var(--moe-bg-2);overflow:clip}
+  border-radius:12px;background:var(--moe-bg-2);overflow:clip;overflow-anchor:none}
 .moe-post-content details>summary{display:flex;align-items:center;gap:.5em;
   padding:10px 14px;font-weight:600;
   cursor:pointer;user-select:none;list-style:none;
@@ -665,7 +665,7 @@ html.dark .moe-chip[style*="--moe-c"]{color:color-mix(in srgb,var(--moe-c) 62%,#
 
 /* ===== Mac 风格代码块 ===== */
 .moe-post-content pre.moe-code{position:relative;padding:0;margin:1.4em 0;border-radius:12px;
-  overflow:hidden;background:#282c34;box-shadow:var(--moe-shadow);
+  overflow:hidden;background:#282c34;box-shadow:var(--moe-shadow);overflow-anchor:none;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Cascadia Code","Source Code Pro",monospace}
 .moe-code-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;
   background:rgba(0,0,0,.22);border-bottom:1px solid rgba(255,255,255,.07)}
