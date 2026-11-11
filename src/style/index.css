@@ -180,6 +180,40 @@ html.dark .moe-icon-moon{display:block}
 .moe-post-content img{border-radius:10px;display:block;margin:1em auto;box-shadow:var(--moe-shadow)}
 .moe-post-content blockquote{margin:1em 0;padding:.6em 1em;border-left:4px solid var(--moe-theme);
   background:var(--moe-bg-2);border-radius:0 8px 8px 0;color:var(--moe-muted)}
+/* ===== Halo 折叠块（details/summary）===== */
+.moe-post-content details{margin:1.2em 0;border:1px solid var(--moe-border);
+  border-radius:12px;background:var(--moe-bg-2);overflow:clip;overflow-anchor:none}
+.moe-post-content details>summary{display:flex;align-items:center;gap:.5em;
+  padding:10px 14px;font-weight:600;
+  cursor:pointer;user-select:none;list-style:none;
+  transition:color .18s ease,background .18s ease}
+.moe-post-content details>summary :is(h1,h2,h3,h4,h5,h6,p){margin:0;padding:0;border:0;
+  font-size:inherit;display:inline}
+.moe-post-content details>summary::before{content:"";flex:none;width:0;height:0;
+  border-left:5px solid currentColor;border-top:4px solid transparent;
+  border-bottom:4px solid transparent;transition:transform .2s ease}
+.moe-post-content details[open]>summary::before{transform:rotate(90deg)}
+.moe-post-content details>summary:hover{color:var(--moe-theme);
+  background:color-mix(in srgb,var(--moe-theme) 7%,transparent)}
+.moe-post-content details>summary:focus-visible{outline:2px solid var(--moe-theme);outline-offset:-2px}
+.moe-post-content details[open]>summary{border-bottom:1px solid var(--moe-border)}
+.moe-post-content details>summary~*{padding:0 14px}
+.moe-post-content details>summary+*{padding-top:4px}
+.moe-post-content details>summary~*:last-child{padding-bottom:12px}
+.moe-post-content details details{margin:.8em 0;background:transparent}
+/* 展开/收起高度过渡：避免内容瞬间撑开页面造成的跳动 */
+@supports (selector(::details-content)) and (interpolate-size: allow-keywords){
+  .moe-post-content details{interpolate-size:allow-keywords}
+  .moe-post-content details::details-content{block-size:0;overflow:hidden;
+    transition:block-size .28s ease,content-visibility .28s;
+    transition-behavior:allow-discrete}
+  .moe-post-content details[open]::details-content{block-size:auto}
+}
+/* 减弱动效：须置于上面的过渡声明之后，同特异性下后者才生效 */
+@media (prefers-reduced-motion:reduce){
+  .moe-post-content details::details-content{transition:none}
+  .moe-post-content details>summary::before{transition:none}
+}
 .moe-post-content code{background:var(--moe-bg-2);padding:2px 6px;border-radius:6px;font-size:.92em}
 .moe-post-content pre{position:relative;background:#282c34;color:#e6e6e6;padding:16px;
   border-radius:12px;overflow:auto;margin:1.2em 0}
@@ -631,7 +665,7 @@ html.dark .moe-chip[style*="--moe-c"]{color:color-mix(in srgb,var(--moe-c) 62%,#
 
 /* ===== Mac 风格代码块 ===== */
 .moe-post-content pre.moe-code{position:relative;padding:0;margin:1.4em 0;border-radius:12px;
-  overflow:hidden;background:#282c34;box-shadow:var(--moe-shadow);
+  overflow:hidden;background:#282c34;box-shadow:var(--moe-shadow);overflow-anchor:none;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Cascadia Code","Source Code Pro",monospace}
 .moe-code-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;
   background:rgba(0,0,0,.22);border-bottom:1px solid rgba(255,255,255,.07)}

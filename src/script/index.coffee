@@ -755,10 +755,19 @@ window.MoesoraInitPage = ->
           return
         # 折叠箭头：整块平滑收起 / 展开（视频里的效果）
 
+        expandEnd = null
+        expandedH = 0
         setCollapsed = (folded, animate) ->
+          # 连续点击时丢弃上一次未完成的回调，避免 max-height 停在中间值
+          if expandEnd
+            body.removeEventListener 'transitionend', expandEnd
+            expandEnd = null
           if folded
+            # 收起时 max-height:0 会压缩 flex 子项，scrollHeight 偏小；
+            # 折叠前 body 还是展开状态，此刻量到的高度才是准的
+            expandedH = body.scrollHeight
             if animate
-              body.style.maxHeight = body.scrollHeight + 'px'
+              body.style.maxHeight = expandedH + 'px'
               requestAnimationFrame ->
                 pre.classList.add 'moe-code-collapsed'
                 body.style.maxHeight = '0px'
@@ -768,14 +777,22 @@ window.MoesoraInitPage = ->
               body.style.maxHeight = '0px'
           else
             pre.classList.remove 'moe-code-collapsed'
-            body.style.maxHeight = body.scrollHeight + 'px'
-
-            te = ->
-              body.style.maxHeight = 'none'
-              body.removeEventListener 'transitionend', te
+            body.style.maxHeight = '0px'
+            targetH = expandedH or body.scrollHeight
+            requestAnimationFrame ->
+              body.style.maxHeight = targetH + 'px'
               return
 
-            body.addEventListener 'transitionend', te
+            # 只等 max-height 的过渡结束：opacity（.25s）比它短（.32s），
+            # 不判断属性名会在 opacity 结束时提前把高度定死，展开会卡顿一下
+            expandEnd = (e) ->
+              return if e.target isnt body or e.propertyName isnt 'max-height'
+              body.style.maxHeight = 'none'
+              body.removeEventListener 'transitionend', expandEnd
+              expandEnd = null
+              return
+
+            body.addEventListener 'transitionend', expandEnd
           return
 
         bar.querySelector('.moe-code-fold').addEventListener 'click', ->
