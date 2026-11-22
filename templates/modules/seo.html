@@ -50,7 +50,7 @@
 
     <link rel="alternate" type="application/rss+xml" th:title="${site.title}" th:href="${_rss}"/>
 
-    <script type="application/ld+json" th:if="${_isPost and _pubISO != ''}" th:utext="${'{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;Article&quot;,&quot;headline&quot;:&quot;' + _titleJ + '&quot;,&quot;datePublished&quot;:&quot;' + _pubISO + '&quot;,&quot;mainEntityOfPage&quot;:&quot;' + _url + '&quot;,&quot;publisher&quot;:{&quot;@type&quot;:&quot;Organization&quot;,&quot;name&quot;:&quot;' + site.title + '&quot;}' + (_img != '' ? (',&quot;image&quot;:&quot;' + _img + '&quot;') : '') + '}'}">{}</script>
+    <script type="application/ld+json" th:if="${_isPost and _pubISO != ''}" th:inline="javascript">{"@context":"https://schema.org","@type":"Article","headline":[[${_titleJ}]],"datePublished":[[${_pubISO}]],"mainEntityOfPage":[[${_url}]],"publisher":{"@type":"Organization","name":[[${site.title}]]}/*[# th:if="${_img != ''}"]*/,"image":[[${_img}]]/*[/]*/}</script>
   </th:block>
 </th:block>
 </head>
